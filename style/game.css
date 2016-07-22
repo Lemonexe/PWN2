@@ -1,0 +1,46 @@
+/*
+CSS pro stránku aplikace Game
+*/
+body {
+	background-color: rgb(30,30,30);
+	color: rgb(200, 200, 200);
+	font-family: Courier New;
+	padding: 0px;
+	margin: 0px;
+	font-size: 13px;
+}
+
+#game {
+	position: absolute;
+
+	border: 2px solid rgb(200, 200, 200);
+}
+
+#console {
+	position:absolute;
+
+	overflow: auto;
+
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+#consoleInput {
+	position: absolute;
+
+	background-color: rgb(35,35,35);
+
+	padding-left: 2px;
+	padding-right: 2px;
+	border: none;
+}
+
+#consoleInput:focus {
+	border: none;
+	outline: none;
+}
+
+/*
+TODO
+https://css-tricks.com/custom-scrollbars-in-webkit/
+*/
