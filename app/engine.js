@@ -1,8 +1,10 @@
 /*
-Vítejte v hlavním javascriptovém souboru PWN!
+ENGINE.JS
+	Welcome to PWN! This is the main javascript file, which initializes main objects of the game upon window onload.
+	It also contains constructor of one of those objects, state, and some utils that are really ubiquitos
 */
 
-//INICIALIZACE PROGRAMU
+//	INITIALIZATION
 var state, controller, render, game;
 function init() {
 	state = new State();
@@ -12,43 +14,57 @@ function init() {
 };
 window.onload = init;
 
-//OBECNÉ VĚCI
+
+
+//	STATE CONSTRUCTOR
+function State() {
+	//current written line (not used yet)
+	this.line = '';
+
+	//console history (as it is rendered)
+	this.console = [];
+
+	//history of commands as they were entered by user (for autocomplete)
+	this.commandHistory = [];
+	
+	//currently available commands
+	this.commands = [
+		commands.help,
+		commands.cls,
+		commands.resize,
+		commands.test
+	];
+};
+
+
+
+//	GENERALY USED UTILS
+
+//geto is quite self-explanatory, it serves merely as a shortcut to DOM
 function geto(id) {
 	return document.getElementById(id);
 }
 
-//
+//a thenable function that loads a resource from the server (used to load maps)
+/*
+ASI TO ALE NEBUDU DĚLAT ASYNCHRONNĚ, ĚTO ZBYTEČNÝ
+všechna data budou mít dohromady asi tolik kilobajtů jako jeden obrázek v PWN 1 :-D
 
-function State() {
-	this.console = [];
-	this.line = "";
-	//current commands
-	this.commands = [
-		{
-			cmd: 'test',
-			purpose: 'general',
-			callback: function(args) {
-				controller.log(JSON.stringify(args));
-			}
-		},
-		{
-			cmd: 'resize',
-			purpose: 'general',
-			argCount: 2,
-			callback: function(args) {
-				render.resize(args[0], args[1]);
-			}
-		},
-		{
-			cmd: 'cls',
-			purpose: 'general',
-			callback: function(args) {
-				controller.clear();
-			}
-		}
-	];
-	this.commandHistory = [];
-	
-};
+function load(url) {
+	return new Promise(function(resolve, reject) {
+		//aculy does nothing
+		var xobj = new XMLHttpRequest();
+		xobj.open('GET',url,true);
+		xobj.overrideMimeType("application/json");
+		xobj.send(null);
+		xobj.onreadystatechange = function(){
+			if(xobj.readyState==4 && xobj.status==200){
+				resolve(xhttp.responseText);
+			}};
+	});
+}
 
-
+load('README.md').then(function(data) {
+	alert(data);
+});
+*/

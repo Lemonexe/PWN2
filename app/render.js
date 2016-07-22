@@ -1,5 +1,7 @@
 /*
-
+RENDER.JS
+	This file contains constructor of the render object
+	Render operates DOM to render the game box, console and gamemap
 */
 
 function Render() {
@@ -46,6 +48,6 @@ function Render() {
 		obj.scrollTop = obj.scrollHeight - obj.clientHeight;
 	}
 
-	this.resize(200, 200);
+	this.resize(800, 600);
 	this.renderConsole();
 };
