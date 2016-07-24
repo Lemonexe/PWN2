@@ -35,8 +35,21 @@ function Controller() {
 		var command = args[0];
 		args.shift();
 
-		this.log('&gt;' + value);
+		this.log('&gt; ' + value);
 
+		var match = state.commands.filter(item => item.command === command)[0];
+
+		if(!match) {
+			this.log('Command ' + command + ' not found!');
+		}
+		else if(match.hasOwnProperty('argCount') && match.argCount !== args.length) {
+			this.log('Command ' + command + ' requires ' + match.argCount + ' arguments!');
+		}
+		else {
+			match.callback(args);
+		}
+
+		/*
 		var item;
 		for(var i in state.commands) {
 			item = state.commands[i];
@@ -49,8 +62,9 @@ function Controller() {
 				return;
 			}
 		}
+		
 
-		this.log('Command ' + command + ' not found!');
+		this.log('Command ' + command + ' not found!');*/
 	};
 
 	//this executes the help command
@@ -68,6 +82,9 @@ function Controller() {
 			controller.log(item.command.toUpperCase() + areArgs(item) + ': ' + item.description + '<br>');
 		}
 	};
+
+
+
 
 	//EVENT LISTENERS
 	window.onkeydown = function(event) {controller.processKey(event);};

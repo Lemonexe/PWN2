@@ -5,24 +5,7 @@ COMMANDS.JS
 	See their description property for details...
 */
 
-var commands = {
-	test: {
-		command: 'test',
-		purpose: 'general',
-		description: 'This is a command for testing purpose, it writes its arguments JSON-stringified.',
-		callback: function(args) {
-			controller.log(JSON.stringify(args));
-		}
-	},
-	resize: {
-		command: 'resize',
-		purpose: 'general',
-		description: 'This command forces resize, it requires two parameters: resize width height',
-		argCount: 2,
-		callback: function(args) {
-			render.resize(args[0], args[1]);
-		}
-	},
+var cmds = {
 	cls: {
 		command: 'cls',
 		purpose: 'general',
@@ -37,6 +20,31 @@ var commands = {
 		description: 'This command lists all commands that are available at the moment.',
 		callback: function(args) {
 			controller.help();
+		}
+	},
+	say: {
+		command: 'say',
+		purpose: 'general',
+		description: 'This command logs the argument to the console. The whole argument field is considered one argument.',
+		callback: function(args) {
+			controller.log(args.join(' '));
+		}
+	},
+		resize: {
+		command: 'resize',
+		purpose: 'general',
+		description: 'This command forces resize, it requires two parameters: resize width height.',
+		argCount: 2,
+		callback: function(args) {
+			render.resize(args[0], args[1]);
+		}
+	},
+	autoresize: {
+		command: 'autoresize',
+		purpose: 'general',
+		description: 'This command forces autoresize.',
+		callback: function(args) {
+			render.autoResize();
 		}
 	}
 };

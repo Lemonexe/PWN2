@@ -2,7 +2,7 @@
 CSS for the game
 */
 
-body {
+.general {
 	background-color: rgb(30,30,30);
 	color: rgb(200, 200, 200);
 	font-family: Courier New;
@@ -17,20 +17,22 @@ body {
 	border: 2px solid rgb(200, 200, 200);
 }
 
-#console {
+#consoleWrapper {
 	position:absolute;
 
 	overflow: auto;
+
+	display: inline;
 
 	padding-left: 2px;
 	padding-right: 2px;
 }
 
+#consoleText {
+	display: inline;
+}
+
 #consoleInput {
-	position: absolute;
-
-	background-color: rgb(100,100,50);
-
 	padding-left: 2px;
 	padding-right: 2px;
 	border: none;

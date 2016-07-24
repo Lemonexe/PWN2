@@ -5,22 +5,20 @@ ENGINE.JS
 */
 
 //	INITIALIZATION
+
 var state, controller, render, game;
 function init() {
 	state = new State();
 	controller = new Controller();
 	render = new Render();
 	game = new Game();
+	checkEC6();
 };
 window.onload = init;
 
 
-
 //	STATE CONSTRUCTOR
 function State() {
-	//current written line (not used yet)
-	this.line = '';
-
 	//console history (as it is rendered)
 	this.console = [];
 
@@ -29,10 +27,10 @@ function State() {
 	
 	//currently available commands
 	this.commands = [
-		commands.help,
-		commands.cls,
-		commands.resize,
-		commands.test
+		cmds.help,
+		cmds.cls,
+		cmds.resize,cmds.autoresize,
+		cmds.say
 	];
 };
 
@@ -46,10 +44,6 @@ function geto(id) {
 }
 
 //a thenable function that loads a resource from the server (used to load maps)
-/*
-ASI TO ALE NEBUDU DĚLAT ASYNCHRONNĚ, ĚTO ZBYTEČNÝ
-všechna data budou mít dohromady asi tolik kilobajtů jako jeden obrázek v PWN 1 :-D
-
 function load(url) {
 	return new Promise(function(resolve, reject) {
 		//aculy does nothing
@@ -64,7 +58,20 @@ function load(url) {
 	});
 }
 
+/*
 load('README.md').then(function(data) {
 	alert(data);
 });
 */
+
+//this function tests the browser for EC6 features and in overwrites the whole page with error in case of failure
+function checkEC6() {
+	try {
+		eval('const pole=[1,2];for(let item of pole){let arrow=pole.filter(item2 => item2===item);}');
+	}
+	catch(err) {
+		document.body.innerHTML = '<h1>PWN cannot be executed in your internet browser :-(</h1>'
+			+ 'Your browser is probably old and doesn\'t support EC6 javascript.<br>'
+			+ 'Update your browser in order to play PWN (PWN works in latest Chrome, Firefox or Edge).';
+	}
+}
