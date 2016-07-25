@@ -1,0 +1,5 @@
+console tabulátor
+JSON
+
+custom scrollbar
+custom placeholder

@@ -6,13 +6,13 @@ RENDER.JS
 
 function Render() {
 	this.getAvailableSize = function() {
-		var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-		var height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+		let width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		let height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 		return [width, height];
 	};
 
 	this.autoResize = function() {
-		var available = this.getAvailableSize();
+		let available = this.getAvailableSize();
 		this.resize(available[0] * 0.8, available[1] * 0.8);
 	};
 
@@ -21,7 +21,7 @@ function Render() {
 		height = parseInt(height);
 		if(isNaN(width) || isNaN(height)) {return;}
 
-		var available = this.getAvailableSize();
+		let available = this.getAvailableSize();
 
 		if(width > available[0]) {width = available[0] - 10;}
 		if(height > available[1]) {height = available[1] - 10;}
@@ -39,16 +39,12 @@ function Render() {
 	};
 
 	this.generateConsole = function() {
-		var text = '';
-		for(var i in state.console) {
-			text += state.console[i] + '<br>';
-		}
-		text += '&gt;';
-		return text;
+		if(state.console.length === 0) {return '&gt;';}
+		return state.console.join('<br>') + '<br>&gt;';
 	};
 
 	this.renderConsole = function() {
-		var obj = geto('consoleText');
+		let obj = geto('consoleText');
 		obj.innerHTML = this.generateConsole();
 		obj.scrollTop = obj.scrollHeight - obj.clientHeight;
 		geto('consoleInput').focus();
@@ -56,7 +52,6 @@ function Render() {
 
 	this.autoResize();
 	this.renderConsole();
-
 
 
 

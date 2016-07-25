@@ -5,16 +5,17 @@ ENGINE.JS
 */
 
 //	INITIALIZATION
-
 var state, controller, render, game;
+
 function init() {
 	state = new State();
 	controller = new Controller();
 	render = new Render();
 	game = new Game();
-	checkEC6();
 };
 window.onload = init;
+checkEC6();
+
 
 
 //	STATE CONSTRUCTOR
@@ -23,14 +24,13 @@ function State() {
 	this.console = [];
 
 	//history of commands as they were entered by user (for autocomplete)
-	this.commandHistory = [];
+	this.history = [];
 	
 	//currently available commands
 	this.commands = [
-		cmds.help,
-		cmds.cls,
+		cmds.help,cmds.cls,cmds.history,cmds.log,
 		cmds.resize,cmds.autoresize,
-		cmds.say
+		cmds.test,cmds.eval
 	];
 };
 
@@ -47,11 +47,11 @@ function geto(id) {
 function load(url) {
 	return new Promise(function(resolve, reject) {
 		//aculy does nothing
-		var xobj = new XMLHttpRequest();
+		let xobj = new XMLHttpRequest();
 		xobj.open('GET',url,true);
 		xobj.overrideMimeType("application/json");
 		xobj.send(null);
-		xobj.onreadystatechange = function(){
+		xobj.onreadystatechange = function() {
 			if(xobj.readyState==4 && xobj.status==200){
 				resolve(xhttp.responseText);
 			}};
@@ -70,8 +70,8 @@ function checkEC6() {
 		eval('const pole=[1,2];for(let item of pole){let arrow=pole.filter(item2 => item2===item);}');
 	}
 	catch(err) {
-		document.body.innerHTML = '<h1>PWN cannot be executed in your internet browser :-(</h1>'
+		document.write('<h1>PWN cannot be executed in your internet browser :-(</h1>'
 			+ 'Your browser is probably old and doesn\'t support EC6 javascript.<br>'
-			+ 'Update your browser in order to play PWN (PWN works in latest Chrome, Firefox or Edge).';
+			+ 'Update your browser in order to play PWN (PWN works in latest Chrome, Firefox or Edge).');
 	}
 }
