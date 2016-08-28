@@ -1,15 +1,21 @@
-revert history
-console prompt yes no
+<<<SMALL CHANGES>>>
+POUŽÍT arry.getObj, udělat jej korektně
+console prompt
+	special prompt - yes no
 console tabulátor
-	udělat div s css na autocomplete a titles
-command tags (used in help, history, mazání a přiřazování commandů)
 JSON loading
-local storage: state object  (later game.state)
+SAVING METHODS (for state object, later game.state)
+	local storage
+	export/import as file
+
+
+<<<HUGE CHANGES>>>
 udělat obecný renderer ascii art mapy pro pouziti v mapy a static částí konzole, i s barvičkama a animacema
 
 
 
 
-LOW PRIORITY:	
-	custom scrollbar
-	custom placeholder
+<<<LOW PRIORITY>>>
+	vybrat nejlepší monotype písmo, nyní je Courier
+	custom scrollbar - pro div id=consoleWrapper
+	custom placeholder - pro input id=consoleInput

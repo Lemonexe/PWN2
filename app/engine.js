@@ -34,10 +34,8 @@ function State() {
 	*/
 
 	this.tree = {
-		name: 'false',
-		commands: [
-			cmds.help, cmds.cls, cmds.cd, cmds.mk, cmds.history, cmds.log, cmds.resize, cmds.autoresize, cmds.eval//_DEV
-		],
+		name: '',
+		commands: cmds.select(),
 		children: []
 	};
 

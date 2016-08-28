@@ -63,7 +63,7 @@ function Controller() {
 		render.renderConsole();
 	};
 
-	//general function to analyze text written by user and execute the command. Used together with add2history
+	//general function to analyze text written by user and execute the command
 	this.processCommand = function() {
 		let value = geto('consoleInput').value.trim();
 		geto('consoleInput').value = '';
@@ -102,6 +102,30 @@ function Controller() {
 		}
 
 		match.callback(arg);
+	};
+
+	//add commands from array
+	this.addCmds = function(cmds) {
+		for(let cmd of cmds) {
+			if(!controller.gC().commands.getObj('command', cmd.command)) {
+				controller.gC().commands.push(cmd);
+			}
+		}
+	};
+
+	//delete commands according to array of their invoke names (or a single name as a string)
+	this.deleteCmds = function(names) {
+		if(typeof names === 'string') {
+			names = [names];
+		}
+		controller.gC().commands = controller.gC().commands.filter(item => names.indexOf(item.command) === -1);
+	};
+
+	//superstructure above deleteCmds - delete Cmds by list of tags
+	this.deleteCmdsByTags = function(tags) {
+		let names = cmds.select(tags)
+			.map(item => item.command);
+		this.deleteCmds(names);
 	};
 
 	//this lets you choose commands from history. You either enter the history, or, if you're already in it, move further or closer

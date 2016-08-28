@@ -58,7 +58,7 @@ function Render() {
 	};
 
 	this.resizeInput = function() {
-		geto('consoleInput').style.width = (this.width - geto('consoleAddress').offsetWidth - 35) + 'px';
+		geto('consoleInput').style.width = (this.width - geto('consoleAddress').offsetWidth - 30) + 'px';
 	};
 
 	this.autoResize();

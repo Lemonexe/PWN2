@@ -5,7 +5,7 @@ CSS for the game
 .general {
 	background-color: rgb(30,30,30);
 	color: rgb(200, 200, 200);
-	font-family: Courier New;
+	font-family: Courier;
 	padding: 0px;
 	margin: 0px;
 	font-size: 13px;
@@ -18,7 +18,7 @@ CSS for the game
 }
 
 #consoleWrapper {
-	position:absolute;
+	position: absolute;
 
 	overflow: auto;
 
@@ -33,9 +33,9 @@ CSS for the game
 }
 
 #consoleInput {
-	padding-left: 2px;
-	padding-right: 2px;
 	border: none;
+	outline: none;
+	/*background-color: #404040;*/
 }
 
 #consoleInput:focus {

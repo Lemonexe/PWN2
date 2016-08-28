@@ -14,17 +14,38 @@ COMMANDS.JS
 				//here comes the executed script
 			}
 		}
-	note 1. identifier doesn't have to agree with command. It is just an ID, a reference of the command...
-	note 2. command mustn't contain any whitespace characters, or it won't be possible to invoke it.
+	note 1. identifier doesn't have to agree with command. It is just an ID, a reference of the command... Property 'command' is the invoking code...
+	note 2. property 'command' mustn't contain any whitespace characters, or it won't be possible to invoke it.
 	note 3. callback always has to accept arg, even if it doesn't use it.
 */
 
 var cmds = {
 	//MANAGAMENT METHODS
-	//this function returns array of commands. Without any argument it returns ALL commands, with array of tags supplied it returns commands that have all those tags.
-	select: function(tags) {
 
+	//this function returns array of commands. Without any argument it returns ALL commands, with array of tags (or a single tag as a string) supplied it returns commands that have all those tags.
+	select: function(tags) {
+		if(typeof tags === 'string') {
+			tags = [tags];
+		}
+		let self = this;
+		let cmds = Object.keys(self)
+			.map(item => self[item])
+			.filter(item => typeof item !== 'function')
+		if(!tags) {
+			return cmds;
+		}
+		return cmds.filter(function(item) {
+			for(let tag of tags) {
+				if(item.tags.indexOf(tag) === -1) {
+					return false;
+				}
+			}
+			return true;
+		});
 	},
+
+
+
 	//COMMANDS
 	cls: {
 		command: 'cls',
@@ -36,7 +57,7 @@ var cmds = {
 	},
 	cd: {
 		command: 'cd',
-		tags: ['general'],
+		tags: ['general', 'dev'],
 		description: 'This command enters subconsole specified by argument, or enters the parent console if the argument is ..',
 		callback: function(arg) {
 			if(arg === '..' && state.address.length === 0) {
@@ -57,11 +78,11 @@ var cmds = {
 	},
 	mk: {
 		command: 'mk',
-		tags: ['general'],
+		tags: ['general', 'dev'],
 		description: 'This command creates a subconsole with the argument as a name.',
 		callback: function(arg) {
 			if(arg) {
-				controller.addConsole(arg, [cmds.cd, cmds.mk, cmds.help]);
+				controller.addConsole(arg, cmds.select('general'));
 				controller.log('Console ' + arg + ' created!');
 
 			}
@@ -70,11 +91,23 @@ var cmds = {
 			}
 		}
 	},
+	ls: {
+		command: 'ls',
+		tags: ['general', 'dev'],
+		description: 'This command lists subconsoles of the current console.',
+		callback: function(arg) {
+			controller.gC().children.forEach(item => controller.log(item.name));
+		}
+	},
 	help: {
 		command: 'help',
 		tags: ['general'],
-		description: 'Without arguments, this command lists all commands that are available at the moment. If you type an argument, it will describe a specific command.',
+		description: 'Without arguments, this command lists all commands that are available at the moment. If you type an argument, it will either search for a specific command, or, if none found, for commands containing a tag.',
 		callback: function(arg) {
+			let tags = function(tags) {
+				if(tags.length === 0) {return '';}
+				return ' (Tags: ' + tags.join(', ') + ')';
+			};
 			let match;
 			if(arg) {
 				match = controller.gC().commands.filter(item => item.command === arg);
@@ -89,7 +122,8 @@ var cmds = {
 			else {
 				match = controller.gC().commands;
 			}
-			match.forEach(item => controller.log(item.command.toUpperCase() + ': ' + item.description + '<br>'));
+			controller.log(match.length + ' commands found:<br>');
+			match.forEach(item => controller.log(item.command.toUpperCase() + ': ' + item.description + tags(item.tags) + '<br>'));
 		}
 	},
 	history: {
@@ -102,7 +136,7 @@ var cmds = {
 	},
 	log: {
 		command: 'log',
-		tags: ['general'],
+		tags: ['dev'],
 		arg: 'string',
 		description: 'This command logs the argument to the console. It takes a string argument.',
 		callback: function(arg) {
@@ -111,7 +145,7 @@ var cmds = {
 	},
 	resize: {
 		command: 'resize',
-		tags: ['general'],
+		tags: ['general', 'rendering'],
 		arg: 'array',
 		argCount: 2,
 		description: 'This command forces resize, it takes two arguments: width height.',
@@ -121,7 +155,7 @@ var cmds = {
 	},
 	autoresize: {
 		command: 'autoresize',
-		tags: ['general'],
+		tags: ['general', 'rendering'],
 		description: 'This command forces autoresize.',
 		callback: function(arg) {
 			render.autoResize();
@@ -129,7 +163,7 @@ var cmds = {
 	},
 	eval: {
 		command: 'eval',
-		tags: ['general'],
+		tags: ['dev'],
 		arg: 'string',
 		description: 'This is a command for testing purpose, it evaluates its argument. It takes a string argument.',
 		callback: function(arg) {
