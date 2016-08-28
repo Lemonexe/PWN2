@@ -5,6 +5,9 @@ RENDER.JS
 */
 
 function Render() {
+	this.width = 0;
+	this.height = 0;
+
 	this.getAvailableSize = function() {
 		let width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 		let height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -26,6 +29,9 @@ function Render() {
 		if(width > available[0]) {width = available[0] - 10;}
 		if(height > available[1]) {height = available[1] - 10;}
 
+		this.width = width;
+		this.height = height;
+
 		geto('game').style.width = width + 'px';
 		geto('game').style.height = height + 'px';
 
@@ -35,20 +41,25 @@ function Render() {
 		geto('consoleWrapper').style.width = (width - 4) + 'px';
 		geto('consoleWrapper').style.height = (height - 20) + 'px';
 
-		geto('consoleInput').style.width = (width - 24) + 'px';
-	};
-
-	this.generateConsole = function() {
-		if(state.console.length === 0) {return '&gt;';}
-		return state.console.join('<br>') + '<br>&gt;';
+		this.resizeInput();
 	};
 
 	this.renderConsole = function() {
-		let obj = geto('consoleText');
-		obj.innerHTML = this.generateConsole();
+		if(state.console.length !== 0) {
+			geto('consoleText').innerHTML = state.console.join('<br>') + '<br>';
+		}
+		geto('consoleAddress').innerHTML = controller.generateAddress();
+
+		let obj = geto('consoleWrapper');
 		obj.scrollTop = obj.scrollHeight - obj.clientHeight;
+
 		geto('consoleInput').focus();
-	}
+		this.resizeInput();
+	};
+
+	this.resizeInput = function() {
+		geto('consoleInput').style.width = (this.width - geto('consoleAddress').offsetWidth - 35) + 'px';
+	};
 
 	this.autoResize();
 	this.renderConsole();

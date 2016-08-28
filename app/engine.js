@@ -14,24 +14,38 @@ function init() {
 	game = new Game();
 };
 window.onload = init;
-checkEC6();
 
 
 
 //	STATE CONSTRUCTOR
 function State() {
-	//console history (as it is rendered)
+	//current action (console or map)
+	this.current = 'console';
+
+	//current console address
+	this.address = [];
+
+	/*
+	CONSOLE EXAMPLE:{
+		name: 'asdf'	name of the console - part of the address (something like a directory)
+		commands: []	commands available for this console
+		children: []	array of subconsoles - members of this array are objects exactly like this one!
+	}
+	*/
+
+	this.tree = {
+		name: 'false',
+		commands: [
+			cmds.help, cmds.cls, cmds.cd, cmds.mk, cmds.history, cmds.log, cmds.resize, cmds.autoresize, cmds.eval//_DEV
+		],
+		children: []
+	};
+
+	//complete console history (as it is rendered)
 	this.console = [];
 
 	//history of commands as they were entered by user (for autocomplete)
 	this.history = [];
-	
-	//currently available commands
-	this.commands = [
-		cmds.help,cmds.cls,cmds.history,cmds.log,
-		cmds.resize,cmds.autoresize,
-		cmds.test,cmds.eval
-	];
 };
 
 
@@ -44,34 +58,33 @@ function geto(id) {
 }
 
 //a thenable function that loads a resource from the server (used to load maps)
-function load(url) {
-	return new Promise(function(resolve, reject) {
-		//aculy does nothing
+function AJAXload(url) {
+	return new Promise(function(resolve) {
 		let xobj = new XMLHttpRequest();
-		xobj.open('GET',url,true);
+		xobj.open('GET', url, true);
 		xobj.overrideMimeType("application/json");
 		xobj.send(null);
 		xobj.onreadystatechange = function() {
-			if(xobj.readyState==4 && xobj.status==200){
-				resolve(xhttp.responseText);
-			}};
+			if(xobj.readyState === 4 && xobj.status === 200) {
+				resolve(xobj.responseText);
+			}
+		};
 	});
 }
 
+//this function searches array of objects and returns the object that contains key: value or false if none found
+Array.prototype.getObj = function(key, value) {
+	let arr = this;
+	arr = arr.filter(item => item[key] === value);
+	if(arr.length === 0) {
+		return false;
+	}
+	return arr[0];
+};
+
 /*
-load('README.md').then(function(data) {
+with this you can test AJAXload...
+AJAXload('README.md').then(function(data) {
 	alert(data);
 });
 */
-
-//this function tests the browser for EC6 features and in overwrites the whole page with error in case of failure
-function checkEC6() {
-	try {
-		eval('const pole=[1,2];for(let item of pole){let arrow=pole.filter(item2 => item2===item);}');
-	}
-	catch(err) {
-		document.write('<h1>PWN cannot be executed in your internet browser :-(</h1>'
-			+ 'Your browser is probably old and doesn\'t support EC6 javascript.<br>'
-			+ 'Update your browser in order to play PWN (PWN works in latest Chrome, Firefox or Edge).');
-	}
-}

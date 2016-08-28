@@ -4,13 +4,15 @@
 		<meta charset="UTF-8">
 		<title>PWN 2</title>
 
-		<!--JS main-->
+		<!--JS init-->
 		<script src="app/engine.js" type="text/javascript"></script>
+
+		<!--JS main-->
 		<script src="app/game.js" type="text/javascript"></script>
 		<script src="app/controller.js" type="text/javascript"></script>
 		<script src="app/render.js" type="text/javascript"></script>
 
-		<!--JS other-->
+		<!--JS services-->
 		<script src="app/services/commands.js" type="text/javascript"></script>
 		
 		<!--CSS-->
@@ -20,7 +22,9 @@
 		<div id="game">
 			<div id="consoleWrapper">
 				<div id="consoleText"></div>
+				<span id="consoleAddress"></span>
 				<input id="consoleInput" class="general">
+				<!--<input id="autocomplete" class="general">-->
 			</div>
 			<div id="map"></div>
 		</div>

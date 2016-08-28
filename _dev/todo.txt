@@ -1,5 +1,15 @@
-console tabul�tor
-JSON
+revert history
+console prompt yes no
+console tabulátor
+	udělat div s css na autocomplete a titles
+command tags (used in help, history, mazání a přiřazování commandů)
+JSON loading
+local storage: state object  (later game.state)
+udělat obecný renderer ascii art mapy pro pouziti v mapy a static částí konzole, i s barvičkama a animacema
 
-custom scrollbar
-custom placeholder
+
+
+
+LOW PRIORITY:	
+	custom scrollbar
+	custom placeholder
