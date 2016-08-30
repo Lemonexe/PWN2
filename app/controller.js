@@ -28,24 +28,52 @@ function Controller() {
 		this.children = [];
 	};
 
-	//this function acts as a superstructure above the console constructor
-	this.addConsole = function(name, cmds) {
-		controller.gC().children.push(new controller.Console(name, cmds));
+	//if possible, deletes the current console and moves up in the tree
+	this.deleteConsole = function() {
+		if(state.address.length === 0) {return;}
+
+		let toBeDeleted = state.address.pop();
+		controller.getConsole().children = controller.getConsole().children.filter(item => item.name !== toBeDeleted);
+
+		render.renderConsole();
 	};
 
-	//returns the current console (as in state.address). gC means getConsole
-	this.gC = function() {
-		let current = state.tree;
-		let children;
-
-		for(let dir of state.address) {
-			children = current.children.filter(item => item.name === dir);
-			if(children.length > 0) {
-				current = children[0];
-			}
-			else {break;}
+	//this function acts as a superstructure above the console constructor
+	this.addConsole = function(name, cmds) {
+		if(!controller.getConsole().children.getObj('name', name)) {
+			controller.getConsole().children.push(new controller.Console(name, cmds));
 		}
-		return current;
+	};
+
+	//this is a template for simple confirmation request
+	this.confirm = function(yesCallback, noCallback) {
+		controller.addConsole('confirm', [
+			cmds.help,
+			{command: 'yes', callback: function(arg) {
+				controller.deleteConsole();
+				yesCallback();
+			}},
+			{command: 'no', callback: function(arg) {
+				controller.deleteConsole();
+				noCallback();
+			}}
+		]);
+		state.address.push('confirm');
+		render.renderConsole();
+	};
+
+	//returns the console according to address, or the current console if no address supplied.
+	this.getConsole = function(address) {
+		if(!address) {address = state.address;}
+		let currentConsole = state.tree;
+		let next;
+
+		for(let dir of address) {
+			next = currentConsole.children.getObj('name', dir);
+			if(!next) {break;}
+			currentConsole = next;
+		}
+		return currentConsole;
 	};
 
 	this.generateAddress = function() {
@@ -85,7 +113,7 @@ function Controller() {
 			state.history.push(value);
 		}
 
-		let match = this.gC().commands.filter(item => item.command === command)[0];
+		let match = this.getConsole().commands.getObj('command', command);
 
 		if(!match) {
 			this.log('Command ' + command + ' not found!');
@@ -104,13 +132,18 @@ function Controller() {
 		match.callback(arg);
 	};
 
-	//add commands from array
+	//add commands from array to the current console
 	this.addCmds = function(cmds) {
 		for(let cmd of cmds) {
-			if(!controller.gC().commands.getObj('command', cmd.command)) {
-				controller.gC().commands.push(cmd);
+			if(!controller.getConsole().commands.getObj('command', cmd.command)) {
+				controller.getConsole().commands.push(cmd);
 			}
 		}
+	};
+
+	//superstructure above addCmds - adds Cmds by tags
+	this.addCmdsByTags = function(tags) {
+		this.addCmds(cmds.select(tags));
 	};
 
 	//delete commands according to array of their invoke names (or a single name as a string)
@@ -118,7 +151,7 @@ function Controller() {
 		if(typeof names === 'string') {
 			names = [names];
 		}
-		controller.gC().commands = controller.gC().commands.filter(item => names.indexOf(item.command) === -1);
+		controller.getConsole().commands = controller.getConsole().commands.filter(item => names.indexOf(item.command) === -1);
 	};
 
 	//superstructure above deleteCmds - delete Cmds by list of tags

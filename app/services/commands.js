@@ -1,7 +1,7 @@
 /*
 COMMANDS.JS
 	This is a command library - list of ALL commands, not all active commands
-	If you want to activate them, add them (or remove) from controller.gC().commands
+	If you want to activate them, add them (or remove) from controller.getConsole().commands
 	See their description property for details...
 	IT ALSO CONTAINS methods that work with commands, which are NOT to be used as commands. They are defined first.
 
@@ -67,7 +67,7 @@ var cmds = {
 				state.address.pop();
 				render.renderConsole();
 			}
-			else if(controller.gC().children.getObj('name', arg)) {
+			else if(controller.getConsole().children.getObj('name', arg)) {
 				state.address.push(arg);
 				render.renderConsole();
 			}
@@ -96,7 +96,7 @@ var cmds = {
 		tags: ['general', 'dev'],
 		description: 'This command lists subconsoles of the current console.',
 		callback: function(arg) {
-			controller.gC().children.forEach(item => controller.log(item.name));
+			controller.getConsole().children.forEach(item => controller.log(item.name));
 		}
 	},
 	help: {
@@ -104,15 +104,22 @@ var cmds = {
 		tags: ['general'],
 		description: 'Without arguments, this command lists all commands that are available at the moment. If you type an argument, it will either search for a specific command, or, if none found, for commands containing a tag.',
 		callback: function(arg) {
-			let tags = function(tags) {
-				if(tags.length === 0) {return '';}
-				return ' (Tags: ' + tags.join(', ') + ')';
-			};
+			let buildEntry = function(item) {
+				let entry = item.command.toUpperCase();
+				if(item.description) {
+					entry += ': ' + item.description;
+				}
+				if(item.tags && item.tags.length > 0) {
+					entry += ' (Tags: ' + item.tags.join(', ') + ')';
+				}
+				return entry + '<br>';
+			}
+
 			let match;
 			if(arg) {
-				match = controller.gC().commands.filter(item => item.command === arg);
+				match = controller.getConsole().commands.filter(item => item.command === arg);
 				if(match.length === 0) {
-					match = controller.gC().commands.filter(item => item.tags.indexOf(arg) > -1);
+					match = controller.getConsole().commands.filter(item => item.tags && item.tags.indexOf(arg) > -1);
 				}
 				if(match.length === 0) {
 					controller.log('Command ' + arg + ' not found!');
@@ -120,10 +127,10 @@ var cmds = {
 				}
 			}
 			else {
-				match = controller.gC().commands;
+				match = controller.getConsole().commands;
 			}
 			controller.log(match.length + ' commands found:<br>');
-			match.forEach(item => controller.log(item.command.toUpperCase() + ': ' + item.description + tags(item.tags) + '<br>'));
+			match.forEach(item => controller.log(buildEntry(item)));
 		}
 	},
 	history: {
@@ -163,12 +170,23 @@ var cmds = {
 	},
 	eval: {
 		command: 'eval',
-		tags: ['dev'],
+		tags: ['general', 'dev'],
 		arg: 'string',
 		description: 'This is a command for testing purpose, it evaluates its argument. It takes a string argument.',
 		callback: function(arg) {
 			try {eval(arg);}
 			catch(err) {controller.log(err);}
+		}
+	},
+	confirm: {
+		command: 'confirm',
+		tags: ['dev'],
+		description: 'This command asks for your confirmation. You can answer yes or no.',
+		callback: function(arg) {
+			controller.confirm(
+				function() {controller.log('Thanks for your confirmation!');},
+				function() {controller.log('Oh well, thanks for answering anyway..');}
+			);
 		}
 	}
 };

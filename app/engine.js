@@ -26,7 +26,7 @@ function State() {
 	this.address = [];
 
 	/*
-	CONSOLE EXAMPLE:{
+	CONSOLE EXAMPLE: {
 		name: 'asdf'	name of the console - part of the address (something like a directory)
 		commands: []	commands available for this console
 		children: []	array of subconsoles - members of this array are objects exactly like this one!
@@ -71,14 +71,18 @@ function AJAXload(url) {
 }
 
 //this function searches array of objects and returns the object that contains key: value or false if none found
-Array.prototype.getObj = function(key, value) {
-	let arr = this;
-	arr = arr.filter(item => item[key] === value);
-	if(arr.length === 0) {
-		return false;
+Object.defineProperty(Array.prototype, 'getObj', {
+    enumerable: false,
+    value: function(key, value) {
+		let arr = this
+			.filter(item => typeof item === 'object')
+			.filter(item => item[key] === value);
+		if(arr.length === 0) {
+			return false;
+		}
+		return arr[0];
 	}
-	return arr[0];
-};
+});
 
 /*
 with this you can test AJAXload...

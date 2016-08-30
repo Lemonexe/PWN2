@@ -1,7 +1,4 @@
 <<<SMALL CHANGES>>>
-POUŽÍT arry.getObj, udělat jej korektně
-console prompt
-	special prompt - yes no
 console tabulátor
 JSON loading
 SAVING METHODS (for state object, later game.state)
