@@ -1,15 +1,22 @@
 <<<SMALL CHANGES>>>
 console tabulátor
-JSON loading
 SAVING METHODS (for state object, later game.state)
-	local storage
+	local storage, to je easy as pie
 	export/import as file
 
 
 <<<HUGE CHANGES>>>
-udělat obecný renderer ascii art mapy pro pouziti v mapy a static částí konzole, i s barvičkama a animacema
-
-
+udělat obecný renderer ascii art mapy pro použití v mapy a static částí konzole, i s barvičkama a animacema
+	jak bude vypadat datová struktura ascii artu?
+	jaký bude výstup? Asi na to musí být definovaný <div> s přesně definovanou velikostí & pozicí & overflow:hidden
+herní mapa - kolekce objektů, které mají sprite a polohu
+	její vykreslování - buďto každý ascii art za sebe, nebo jí agregovat v jeden ascii art a ten vykreslit
+fúze konzole a ascii - konzole se statickou částí (ascii art mapou)
+game objekt - tam není vůbec nic
+	obecný constructor na: player, postavu, inventář, předmět
+	zavést game.state - objekt pro stav hry.
+		state bude obsahovat player
+			player bude obsahovat obecné info (poloha a tak), společný inventář a postavy
 
 
 <<<LOW PRIORITY>>>
