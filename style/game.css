@@ -5,10 +5,14 @@ CSS for the game
 .general {
 	background-color: rgb(30,30,30);
 	color: rgb(200, 200, 200);
-	font-family: Courier;
+	font-family: "Courier New";
 	padding: 0px;
 	margin: 0px;
 	font-size: 13px;
+}
+
+#hidden {
+	display: none;
 }
 
 #game {
@@ -17,7 +21,7 @@ CSS for the game
 	border: 2px solid rgb(200, 200, 200);
 }
 
-#consoleWrapper {
+#console {
 	position: absolute;
 
 	overflow: auto;
@@ -41,6 +45,19 @@ CSS for the game
 #consoleInput:focus {
 	border: none;
 	outline: none;
+}
+
+#popup {
+	display: none;
+
+	position: absolute;
+	top: 0px;
+	left: 0px;
+
+	overflow: auto;
+	
+	background-color: white;
+	color: black;
 }
 
 /*

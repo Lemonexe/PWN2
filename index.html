@@ -14,19 +14,36 @@
 
 		<!--JS services-->
 		<script src="app/services/commands.js" type="text/javascript"></script>
+		<script src="app/services/save.js" type="text/javascript"></script>
 		
 		<!--CSS-->
 		<link rel="stylesheet" href="style/game.css" type="text/css">
 	</head>
 	<body class="general">
+		<!--Box for the whole game - it delimits borders.-->
 		<div id="game">
-			<div id="consoleWrapper">
+
+			<!--WHOLE CONSOLE with subobjects:
+				text of console excluding the last line;
+				the address on the last line;
+				stylized user input;
+				in
+			-->
+			<div id="console">
 				<div id="consoleText"></div>
 				<span id="consoleAddress"></span>
 				<input id="consoleInput" class="general">
 				<!--<input id="autocomplete" class="general">-->
 			</div>
+
+			<!--GAME MAP-->
 			<div id="map"></div>
+
+			<!--POPUP-->
+			<div id="popup"></div>
+
+			<!--HTML elements that need to exist, but be hidden-->
+			<div id="hidden"></div>
 		</div>
 	</body>
 </html>

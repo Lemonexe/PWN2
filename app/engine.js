@@ -19,8 +19,8 @@ window.onload = init;
 
 //	STATE CONSTRUCTOR
 function State() {
-	//current action (console or map)
-	this.current = 'console';
+	//currently focused tab (console, map or popup). Used in rendering
+	this.tab = 'console';
 
 	//current console address
 	this.address = [];
@@ -42,7 +42,7 @@ function State() {
 	//complete console history (as it is rendered)
 	this.console = [];
 
-	//history of commands as they were entered by user (for autocomplete)
+	//history of commands as they were entered by user (mostly for autocomplete)
 	this.history = [];
 };
 
@@ -60,7 +60,7 @@ function AJAXload(url) {
 	return new Promise(function(resolve) {
 		let xobj = new XMLHttpRequest();
 		xobj.open('GET', url, true);
-		xobj.overrideMimeType("application/json");
+		xobj.overrideMimeType('application/json');
 		xobj.send(null);
 		xobj.onreadystatechange = function() {
 			if(xobj.readyState === 4 && xobj.status === 200) {
@@ -70,7 +70,15 @@ function AJAXload(url) {
 	});
 }
 
-//this function searches array of objects and returns the object that contains key: value or false if none found
+//superstructure above AJAXload - this function loads a JSON and executes callback function on it, given the parsed object as an argument
+function JSONload(url, callback) {
+	AJAXload(url).then(function(result) {
+		result = JSON.parse(result);
+		callback(result);
+	});
+}
+
+//an Array method - it searches array of objects and returns the object that contains the requested key: value, or false if none such found
 Object.defineProperty(Array.prototype, 'getObj', {
     enumerable: false,
     value: function(key, value) {
@@ -85,8 +93,18 @@ Object.defineProperty(Array.prototype, 'getObj', {
 });
 
 /*
-with this you can test AJAXload...
-AJAXload('README.md').then(function(data) {
-	alert(data);
+EVERYTHING BELOW IS A TEMPORARY EXPERIMENT. Working experiments shouldn't be commited to github...
+*/
+
+/*
+Example how to load a JSON
+JSONload('data/testdata.json', function(result) {
+	alert(result.someString);
 });
+*/
+
+/*
+window.setTimeout(function() {
+	geto('hidden').innerHTML = '<iframe src="p.pwn"></iframe>';
+}, 10);
 */

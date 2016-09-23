@@ -1,7 +1,9 @@
 /*
-
+GAME.JS
 */
 
 function Game() {
-	this.asdf = "asdf";
+	this.state = {
+		asdf: 'asdf'
+	};
 };
