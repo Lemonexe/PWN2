@@ -47,19 +47,6 @@ CSS for the game
 	outline: none;
 }
 
-#popup {
-	display: none;
-
-	position: absolute;
-	top: 0px;
-	left: 0px;
-
-	overflow: auto;
-	
-	background-color: white;
-	color: black;
-}
-
 /*
 TODO
 https://css-tricks.com/custom-scrollbars-in-webkit/

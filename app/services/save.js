@@ -3,38 +3,52 @@ SAVE.JS
 	This is a single object with functions concering userdata saving & loading
 */
 const save = {
-	localSave: function() {
+	savePrepare: function() {
+		let data = {
+			state: Object.assign({}, state),
+			gameState: Object.assign({}, game.state)
+		};
+		delete data.state.tree;
+		delete data.state.address;
+		return JSON.stringify(data);
+	},
+	loadFinish: function(data) {
+		data = JSON.parse(data);
+		state = data.state;
+		state.tree = new controller.Console('', cmds.select());
+		state.address = [];
+		game.state = data.gameState;
+		render.renderConsole();
+	},
+	saveLocal: function() {
+		let data = this.savePrepare();
+	},
+	loadLocal: function() {
 
 	},
-	localLoad: function() {
-
-	},
-	fileSave: function() {
-		let data = {state: state, gameState: game.state};
-		data = JSON.stringify(data);
+	saveFile: function() {
+		let data = this.savePrepare();
 		let blob = new Blob([data], { type : 'application/json' });
-		let link = (window.URL || window.webkitURL).createObjectURL(blob);
-		render.popup('<a href="' + link + '" download="savegame.pwn" onclick="render.popupClose()">Download!</a>');
+		let url = (window.URL || window.webkitURL).createObjectURL(blob);
+		let link = '<a id="download" href="' + url + '" download="savegame.pwn"></a>';
+
+		//let a = document.createElement('a');a.href = url;a.download = 'savegame.pwn';a.click(); MORE ELEGANT, BUT DOESN'T WORK IN FF
+		geto('hidden').innerHTML = link;
+		geto('download').click();
 	},
-	fileLoadPopup: function() {
-		let HTML = 'Upload your save file (extension .pwn):<br><input type="file" id="upload" onchange="save.fileLoadProcess()">'
-		render.popup(HTML);
+	loadFilePopup: function() {
+		let form = 'Upload your save file (extension .pwn):<br><input type="file" id="upload" onchange="save.loadFileProcess()">'
+		geto('hidden').innerHTML = form;
 		geto('upload').click();
 	},
-	fileLoadProcess: function() {
-		render.popupClose();
+	loadFileProcess: function() {
 		let file = geto('upload').files[0];
 		if(!file) {return;}
 
 		let reader = new FileReader();
-		reader.onload = (function() {
-			let data = JSON.parse(reader.result);
-			state = data.state;
-			game.state = data.gameState;
-			render.renderConsole();
-		});
+		reader.onload = function() {
+			save.loadFinish(reader.result)
+		};
 		reader.readAsText(file);
-	}
+	},
 };
-//eval save.fileLoadPopup()
-//eval save.fileSave()

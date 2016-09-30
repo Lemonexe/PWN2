@@ -18,13 +18,17 @@ function Controller() {
 	this.keyBinds = {
 		'13': function() {controller.processCommand();},
 		'38': function() {controller.moveInHistory(true);},
-		'40': function() {controller.moveInHistory(false);}
+		'40': function() {controller.moveInHistory(false);},
+		'27': function() {/*ESCAPE*/}
 	};
 
 	//CONSOLE
 	this.Console = function(name, cmds) {
+		//name of the console - part of the address (something like a directory)
 		this.name = name;
+		//commands available when you are in this console
 		this.commands = cmds;
+		//array of subconsoles - members of this array are objects exactly like this one!
 		this.children = [];
 	};
 
@@ -124,9 +128,14 @@ function Controller() {
 			arg = arg.split(/\s+/);
 
 			if(match.hasOwnProperty('argCount') && match.argCount !== arg.length) {
-				this.log('Command ' + command + ' requires ' + match.argCount + ' arguments!');
+				this.log('Command ' + match.command + ' requires ' + match.argCount + ' arguments!');
 				return;
 			}
+		}
+
+		if(match.arg === 'string' && !arg) {
+			this.log('Command ' + match.command + ' requires an argument!');
+			return;
 		}
 
 		match.callback(arg);

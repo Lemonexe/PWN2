@@ -1,7 +1,7 @@
 /*
 RENDER.JS
 	This file contains constructor of the render object
-	Render operates DOM to render the game box, console, gamemap and popup window
+	Render operates DOM to render the game box, console, gamemap
 */
 
 function Render() {
@@ -13,7 +13,7 @@ function Render() {
 	this.switchTab = function(tab) {
 		state.tab = tab;
 
-		['console', 'map', 'popup'].forEach(item => geto(item).style.display = 'none');
+		['console', 'map'].forEach(item => geto(item).style.display = 'none');
 		geto(tab).style.display = 'block';
 
 		(tab === 'console') ? geto('consoleInput').focus() : geto('consoleInput').blur();
@@ -55,17 +55,16 @@ function Render() {
 		geto('console').style.width = (width - 4) + 'px';
 		geto('console').style.height = (height - 20) + 'px';
 
-		geto('popup').style.width = width + 'px';
-		geto('popup').style.height = height + 'px';
-
 		this.renderConsole();
 	};
 
 	//this function renders the console: generates the text -> renders it -> scrolls down -> resizes and focuses the input
 	this.renderConsole = function() {
+		let text = '';
 		if(state.console.length !== 0) {
-			geto('consoleText').innerHTML = state.console.join('<br>') + '<br>';
+			text += state.console.join('<br>') + '<br>';
 		}
+		geto('consoleText').innerHTML = text;
 		geto('consoleAddress').innerHTML = controller.generateAddress();
 
 		let obj = geto('console');
@@ -74,18 +73,6 @@ function Render() {
 		geto('consoleInput').focus();
 		geto('consoleInput').style.width = (this.width - geto('consoleAddress').offsetWidth - 30) + 'px';
 	};
-
-	//a window-like popup, used only for meta-game features (like game loading)
-	this.popup = function(contents) {
-		let popup = geto('popup');
-
-		contents = '<input type=\'button\' value=\'X\' onclick=\'render.popupClose();\' style=\'font-size: 32px\'><br>' + contents;
-		popup.innerHTML = contents;
-
-		popup.style.display = 'block';
-	};
-
-	this.popupClose = function() {geto('popup').style.display = 'none';};
 
 
 

@@ -1,11 +1,8 @@
 <<<SMALL CHANGES>>>
-VYŘEŠIT PROBLÉM S UKLÁDÁNÍM METOD V OBJEKTECH (vlastně tedy refaktorovat commands v konzoli...)
-OPEN FILE???
 SWITCHTAB
 console tabulátor
 SAVING METHODS (for state object, later game.state)
 	local storage, to je easy as pie
-	export/import as file
 
 
 

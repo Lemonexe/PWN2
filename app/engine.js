@@ -8,8 +8,8 @@ ENGINE.JS
 var state, controller, render, game;
 
 function init() {
-	state = new State();
 	controller = new Controller();
+	state = new State();
 	render = new Render();
 	game = new Game();
 };
@@ -19,25 +19,14 @@ window.onload = init;
 
 //	STATE CONSTRUCTOR
 function State() {
-	//currently focused tab (console, map or popup). Used in rendering
+	//currently focused tab (console or map). Used in rendering
 	this.tab = 'console';
 
 	//current console address
 	this.address = [];
 
-	/*
-	CONSOLE EXAMPLE: {
-		name: 'asdf'	name of the console - part of the address (something like a directory)
-		commands: []	commands available for this console
-		children: []	array of subconsoles - members of this array are objects exactly like this one!
-	}
-	*/
-
-	this.tree = {
-		name: '',
-		commands: cmds.select(),
-		children: []
-	};
+	//tree of consoles - like a directory tree. See controller.Console for details
+	this.tree = new controller.Console('', cmds.select());
 
 	//complete console history (as it is rendered)
 	this.console = [];

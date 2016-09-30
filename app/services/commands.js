@@ -8,15 +8,18 @@ COMMANDS.JS
 	EXAMPLE:
 		key: {
 			command: 'command_keyword',
-			tags: [],
+			arg: undefined or 'string' -> argument interpreted as string and is as such passed to the callback function
+				'array' -> arg interpreted as array (any number of whitespaces acts as separator)
+				'string' makes the argument obligatory
+			argCount: number, only used if arg == 'array'
+			tags: [tag1, tag2, etc],
 			description: 'Here comes description of what the command does.'
 			callback: function(arg) {
 				//here comes the executed script
 			}
 		}
-	note 1. identifier doesn't have to agree with command. It is just an ID, a reference of the command... Property 'command' is the invoking code...
-	note 2. property 'command' mustn't contain any whitespace characters, or it won't be possible to invoke it.
-	note 3. callback always has to accept arg, even if it doesn't use it.
+	note 1. identifier doesn't have to agree with command. It is just an ID, a reference of the command... Property 'command' is the invoking code!
+	note 2. property 'command' mustn't contain any whitespace characters, or it won't be possible to invoke it!
 */
 
 var cmds = {
@@ -51,12 +54,13 @@ var cmds = {
 		command: 'cls',
 		tags: ['general'],
 		description: 'This command clears the console and console history.',
-		callback: function(arg) {
+		callback: function() {
 			controller.clear();
 		}
 	},
 	cd: {
 		command: 'cd',
+		arg: 'string',
 		tags: ['general', 'dev'],
 		description: 'This command enters subconsole specified by argument, or enters the parent console if the argument is ..',
 		callback: function(arg) {
@@ -78,6 +82,7 @@ var cmds = {
 	},
 	mk: {
 		command: 'mk',
+		arg: 'string',
 		tags: ['general', 'dev'],
 		description: 'This command creates a subconsole with the argument as a name.',
 		callback: function(arg) {
@@ -95,7 +100,7 @@ var cmds = {
 		command: 'ls',
 		tags: ['general', 'dev'],
 		description: 'This command lists subconsoles of the current console.',
-		callback: function(arg) {
+		callback: function() {
 			controller.getConsole().children.forEach(item => controller.log(item.name));
 		}
 	},
@@ -137,24 +142,40 @@ var cmds = {
 		command: 'history',
 		tags: ['general'],
 		description: 'This command lists your console history.',
-		callback: function(arg) {
+		callback: function() {
 			state.history.forEach(item => controller.log(item));
 		}
 	},
 	log: {
 		command: 'log',
-		tags: ['dev'],
 		arg: 'string',
+		tags: ['dev'],
 		description: 'This command logs the argument to the console. It takes a string argument.',
 		callback: function(arg) {
 			controller.log(arg);
 		}
 	},
+	save: {
+		command: 'save',
+		tags: ['general'],
+		description: 'This command saves game into file, which can be downloaded by the user.',
+		callback: function() {
+			save.saveFile();
+		}
+	},
+	load: {
+		command: 'load',
+		tags: ['general'],
+		description: 'This command lets the user load a saved game.',
+		callback: function() {
+			save.loadFilePopup();
+		}
+	},
 	resize: {
 		command: 'resize',
-		tags: ['general', 'rendering'],
 		arg: 'array',
 		argCount: 2,
+		tags: ['general', 'rendering'],
 		description: 'This command forces resize, it takes two arguments: width height.',
 		callback: function(arg) {
 			render.resize(arg[0], arg[1]);
@@ -170,8 +191,8 @@ var cmds = {
 	},
 	eval: {
 		command: 'eval',
-		tags: ['general', 'dev'],
 		arg: 'string',
+		tags: ['general', 'dev'],
 		description: 'This is a command for testing purpose, it evaluates its argument. It takes a string argument.',
 		callback: function(arg) {
 			try {eval(arg);}
