@@ -12,6 +12,10 @@ function init() {
 	state = new State();
 	render = new Render();
 	game = new Game();
+	save.loadLocal();
+	
+	//DEVELOPMENT
+	controller.addCmdsByTags('dev');
 };
 window.onload = init;
 
@@ -26,13 +30,16 @@ function State() {
 	this.address = [];
 
 	//tree of consoles - like a directory tree. See controller.Console for details
-	this.tree = new controller.Console('', cmds.select());
+	this.tree = new controller.Console('', cmds.select('general'));
 
 	//complete console history (as it is rendered)
 	this.console = [];
 
 	//history of commands as they were entered by user (mostly for autocomplete)
 	this.history = [];
+
+	//options
+	this.options = {};
 };
 
 

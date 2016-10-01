@@ -1,8 +1,5 @@
 <<<SMALL CHANGES>>>
-SWITCHTAB
-console tabulátor
-SAVING METHODS (for state object, later game.state)
-	local storage, to je easy as pie
+better options
 
 
 

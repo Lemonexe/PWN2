@@ -6,20 +6,43 @@ CONTROLLER.JS
 */
 
 function Controller() {
+	//EVENT LISTENERS
 	window.onkeydown = function(event) {controller.processKey(event);};
+
+	geto('consoleInput').oninput = function() {
+		controller.autocomplete();
+	};
+
+	window.onerror = function(error) {
+		controller.log('Error: ' + error);
+		return true;
+	};
+
+
 
 	//main function to process onkeydown event, works together with this.keyBinds
 	this.processKey = function(event) {
-		if(this.keyBinds.hasOwnProperty(event.keyCode)) {
-			this.keyBinds[event.keyCode]();
+		let keyBinds = this.keyBinds[state.tab];
+		if(keyBinds.hasOwnProperty(event.keyCode)) {
+			keyBinds[event.keyCode]();
 		}
 	};
 
+	//keyBinds for each game tab
 	this.keyBinds = {
-		'13': function() {controller.processCommand();},
-		'38': function() {controller.moveInHistory(true);},
-		'40': function() {controller.moveInHistory(false);},
-		'27': function() {/*ESCAPE*/}
+		map: {
+			'37': function() {},//left
+			'38': function() {},//up
+			'39': function() {},//right
+			'40': function() {},//down
+		},
+		console: {
+			'13': function() {controller.processCommand();},//enter
+			'38': function() {controller.moveInHistory(true);},//up
+			'40': function() {controller.moveInHistory(false);},//down
+			'9': function() {controller.autocompleteUse();},//tab
+			'27': function() {}//escape
+		}
 	};
 
 	//CONSOLE
@@ -99,6 +122,7 @@ function Controller() {
 	this.processCommand = function() {
 		let value = geto('consoleInput').value.trim();
 		geto('consoleInput').value = '';
+		geto('autocomplete').value = '';
 
 		let command = value.match(/^[^\s]+\s*/);
 		command = command ? command[0] : '';
@@ -141,7 +165,7 @@ function Controller() {
 		match.callback(arg);
 	};
 
-	//add commands from array to the current console
+	//add commands from array to the current console (command objects, not names)
 	this.addCmds = function(cmds) {
 		for(let cmd of cmds) {
 			if(!controller.getConsole().commands.getObj('command', cmd.command)) {
@@ -185,5 +209,31 @@ function Controller() {
 			res = up ? (state.history[index - 1] || state.history[state.history.length - 1]) : (state.history[index + 1] || state.history[0]);
 		}
 		geto('consoleInput').value = res;
+	};
+
+	//this function checks all commands while you're writing and gives you a hint
+	this.autocomplete = function() {
+		let value = geto('consoleInput').value;
+		let cleanValue = value.trim();
+		if(cleanValue.length < 3) {
+			geto('autocomplete').value = '';
+			return;
+		}
+		let cmds = this.getConsole().commands.map(item => item.command);
+		let possibleCMD = '';
+
+		for(let cmd of cmds) {
+			if(cmd.indexOf(cleanValue) === 0) {
+				possibleCMD = cmd;
+				break;
+			}
+		}
+
+		geto('autocomplete').value = possibleCMD ? value.replace(cleanValue, possibleCMD) : ''
+	};
+
+	//this function is triggered by the tab key and fills the hint into the main input
+	this.autocompleteUse = function() {
+		geto('consoleInput').value = geto('autocomplete').value;
 	};
 };

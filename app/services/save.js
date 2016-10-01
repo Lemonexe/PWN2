@@ -15,16 +15,24 @@ const save = {
 	loadFinish: function(data) {
 		data = JSON.parse(data);
 		state = data.state;
-		state.tree = new controller.Console('', cmds.select());
+		state.tree = new controller.Console('', cmds.select('general'));
 		state.address = [];
 		game.state = data.gameState;
+		controller.log('Game successfully loaded!');
 		render.renderConsole();
 	},
 	saveLocal: function() {
 		let data = this.savePrepare();
+		localStorage.setItem('savegame', data);
 	},
 	loadLocal: function() {
-
+		let data = localStorage.getItem('savegame');
+		if(data) {
+			save.loadFinish(data);
+		}
+	},
+	purgeLocal: function() {
+		localStorage.removeItem('savegame');
 	},
 	saveFile: function() {
 		let data = this.savePrepare();

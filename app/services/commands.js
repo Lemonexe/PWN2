@@ -20,6 +20,9 @@ COMMANDS.JS
 		}
 	note 1. identifier doesn't have to agree with command. It is just an ID, a reference of the command... Property 'command' is the invoking code!
 	note 2. property 'command' mustn't contain any whitespace characters, or it won't be possible to invoke it!
+	
+	USED TAG LIST:
+	'general': commands that are available in the root directory
 */
 
 var cmds = {
@@ -61,7 +64,7 @@ var cmds = {
 	cd: {
 		command: 'cd',
 		arg: 'string',
-		tags: ['general', 'dev'],
+		tags: ['dev'],
 		description: 'This command enters subconsole specified by argument, or enters the parent console if the argument is ..',
 		callback: function(arg) {
 			if(arg === '..' && state.address.length === 0) {
@@ -83,7 +86,7 @@ var cmds = {
 	mk: {
 		command: 'mk',
 		arg: 'string',
-		tags: ['general', 'dev'],
+		tags: ['dev'],
 		description: 'This command creates a subconsole with the argument as a name.',
 		callback: function(arg) {
 			if(arg) {
@@ -98,10 +101,28 @@ var cmds = {
 	},
 	ls: {
 		command: 'ls',
-		tags: ['general', 'dev'],
+		tags: ['dev'],
 		description: 'This command lists subconsoles of the current console.',
 		callback: function() {
 			controller.getConsole().children.forEach(item => controller.log(item.name));
+		}
+	},
+	options: {
+		command: 'options',
+		tags: ['general'],
+		description: 'This command lets you change game options (they will be saved).',
+		callback: function() {
+			controller.addConsole('options', [
+				{command: 'exit', description:'Exits the options interface.', callback: function() {
+					state.address.pop();
+					render.renderConsole();
+				}},
+				{command: 'dev', description: 'Type nothing or anything to disable or activate.', callback: function(arg) {
+					state.options.dev = !!arg;
+				}}
+			]);
+			state.address.push('options');
+			cmds.help.callback();
 		}
 	},
 	help: {
@@ -192,7 +213,7 @@ var cmds = {
 	eval: {
 		command: 'eval',
 		arg: 'string',
-		tags: ['general', 'dev'],
+		tags: ['dev'],
 		description: 'This is a command for testing purpose, it evaluates its argument. It takes a string argument.',
 		callback: function(arg) {
 			try {eval(arg);}
