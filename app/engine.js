@@ -5,13 +5,14 @@ ENGINE.JS
 */
 
 //	INITIALIZATION
-var state, controller, render, game;
+var state, controller, render, game, time;
 
 function init() {
 	controller = new Controller();
 	state = new State();
 	render = new Render();
 	game = new Game();
+	time = new Time();
 	save.loadLocal();
 	
 	//DEVELOPMENT

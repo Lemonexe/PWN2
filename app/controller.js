@@ -45,7 +45,7 @@ function Controller() {
 		}
 	};
 
-	//CONSOLE
+	//CONSOLE CONSTRUCTOR - always use with the 'new' operator!
 	this.Console = function(name, cmds) {
 		//name of the console - part of the address (something like a directory)
 		this.name = name;

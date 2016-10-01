@@ -2,6 +2,7 @@
 SAVE.JS
 	This is a single object with functions concering userdata saving & loading
 */
+
 const save = {
 	savePrepare: function() {
 		let data = {
