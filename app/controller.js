@@ -124,6 +124,8 @@ function Controller() {
 		geto('consoleInput').value = '';
 		geto('autocomplete').value = '';
 
+		if(!value) {return;}
+
 		let command = value.match(/^[^\s]+\s*/);
 		command = command ? command[0] : '';
 		
@@ -209,6 +211,7 @@ function Controller() {
 			res = up ? (state.history[index - 1] || state.history[state.history.length - 1]) : (state.history[index + 1] || state.history[0]);
 		}
 		geto('consoleInput').value = res;
+		geto('autocomplete').value = '';
 	};
 
 	//this function checks all commands while you're writing and gives you a hint
@@ -229,7 +232,7 @@ function Controller() {
 			}
 		}
 
-		geto('autocomplete').value = possibleCMD ? value.replace(cleanValue, possibleCMD) : ''
+		geto('autocomplete').value = possibleCMD ? value.replace(cleanValue, possibleCMD) : '';
 	};
 
 	//this function is triggered by the tab key and fills the hint into the main input

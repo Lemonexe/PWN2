@@ -1,7 +1,7 @@
 /*
 ENGINE.JS
 	Welcome to PWN! This is the main javascript file, which initializes main objects of the game upon window onload.
-	It also contains constructor of one of those objects, state, and some utils that are really ubiquitos
+	It also contains constructor of one of those objects, state, and some utils that are really ubiquitous
 */
 
 //	INITIALIZATION
@@ -90,7 +90,9 @@ Object.defineProperty(Array.prototype, 'getObj', {
 });
 
 /*
-EVERYTHING BELOW IS A TEMPORARY EXPERIMENT. Working experiments shouldn't be commited to github...
+EVERYTHING BELOW IS A TEMPORARY EXPERIMENT.
+When you're comitting, comment them!
+Working experiments shouldn't be commited to github...
 */
 
 /*
@@ -98,10 +100,4 @@ Example how to load a JSON
 JSONload('data/testdata.json', function(result) {
 	alert(result.someString);
 });
-*/
-
-/*
-window.setTimeout(function() {
-	geto('hidden').innerHTML = '<iframe src="p.pwn"></iframe>';
-}, 10);
 */

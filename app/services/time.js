@@ -4,7 +4,7 @@ TIME.JS
 */
 
 function Time() {
-	//smallest time tick (milisecond is needlessly small...)
+	//smallest time tick (milisecond is unnecessarily small...)
 	this.tick = 10;
 	window.setInterval(function() {time.interval();}, this.tick);
 

@@ -5,24 +5,7 @@ COMMANDS.JS
 	See their description property for details...
 	IT ALSO CONTAINS methods that work with commands, which are NOT to be used as commands. They are defined first.
 
-	EXAMPLE:
-		key: {
-			command: 'command_keyword',
-			arg: undefined or 'string' -> argument interpreted as string and is as such passed to the callback function
-				'array' -> arg interpreted as array (any number of whitespaces acts as separator)
-				'string' makes the argument obligatory
-			argCount: number, only used if arg == 'array'
-			tags: [tag1, tag2, etc],
-			description: 'Here comes description of what the command does.'
-			callback: function(arg) {
-				//here comes the executed script
-			}
-		}
-	note 1. identifier doesn't have to agree with command. It is just an ID, a reference of the command... Property 'command' is the invoking code!
-	note 2. property 'command' mustn't contain any whitespace characters, or it won't be possible to invoke it!
-	
-	USED TAG LIST:
-	'general': commands that are available in the root directory
+	For an example and list of used tags, see wiki/commands.md
 */
 
 var cmds = {
