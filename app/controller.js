@@ -2,11 +2,11 @@
 CONTROLLER.JS
 	This file contains constructor of the controller object
 	Controller object operates the CONSOLE and listens to events
-	Event listeners are binded at the end of the function
+	Event listeners are bound at the beginning of the function
 */
 
 function Controller() {
-	//EVENT LISTENERS
+	//EVENT LISTENERS - onkeydown, detection of console input change and general runtime error
 	window.onkeydown = function(event) {controller.processKey(event);};
 
 	geto('consoleInput').oninput = function() {
@@ -55,13 +55,14 @@ function Controller() {
 		this.children = [];
 	};
 
-	//if possible, deletes the current console and moves up in the tree
-	this.deleteConsole = function() {
-		if(state.address.length === 0) {return;}
+	//without argument it deletes the current console and moves up in the tree. With argument it deletes subconsole with that name
+	this.deleteConsole = function(toBeDeleted) {
+		if(!toBeDeleted) {
+			if(state.address.length === 0) {return;}
+			toBeDeleted = state.address.pop();
+		}
 
-		let toBeDeleted = state.address.pop();
 		controller.getConsole().children = controller.getConsole().children.filter(item => item.name !== toBeDeleted);
-
 		render.renderConsole();
 	};
 
@@ -72,20 +73,22 @@ function Controller() {
 		}
 	};
 
-	//this is a template for simple confirmation request
-	this.confirm = function(yesCallback, noCallback) {
-		controller.addConsole('confirm', [
-			cmds.help,
-			{command: 'yes', callback: function(arg) {
+	//this is a template for simple question request, also used in options. See cmds.confirm for an example
+	//ARGS: name = name of subconsole, info = explanation what is expected from user, answers = array of commands
+	this.question = function(name, info, answers) {
+		for(let a of answers) {
+			let f = a.callback;
+			a.callback = function() {
 				controller.deleteConsole();
-				yesCallback();
-			}},
-			{command: 'no', callback: function(arg) {
-				controller.deleteConsole();
-				noCallback();
-			}}
-		]);
-		state.address.push('confirm');
+				f();
+			};
+		}
+
+		controller.addConsole(name, answers);
+		state.address.push(name);
+
+		if(info){controller.log(info);}
+		answers.forEach(item => controller.log(item.command + (item.description ? `: ${item.description}` : '')));
 		render.renderConsole();
 	};
 
@@ -130,7 +133,7 @@ function Controller() {
 		command = command ? command[0] : '';
 		
 		let arg = value.replace(command, '');
-		command = command.trim();
+		command = command.trim().toLowerCase();
 
 		this.log(this.generateAddress() + value);
 		
@@ -146,7 +149,7 @@ function Controller() {
 		let match = this.getConsole().commands.getObj('command', command);
 
 		if(!match) {
-			this.log('Command ' + command + ' not found!');
+			this.log(`Command ${command} not found!`);
 			return;
 		}
 		
@@ -154,13 +157,13 @@ function Controller() {
 			arg = arg.split(/\s+/);
 
 			if(match.hasOwnProperty('argCount') && match.argCount !== arg.length) {
-				this.log('Command ' + match.command + ' requires ' + match.argCount + ' arguments!');
+				this.log(`Command ${match.command} requires ${match.argCount} arguments!`);
 				return;
 			}
 		}
 
 		if(match.arg === 'string' && !arg) {
-			this.log('Command ' + match.command + ' requires an argument!');
+			this.log(`Command ${match.command} requires an argument!`);
 			return;
 		}
 

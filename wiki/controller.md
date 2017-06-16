@@ -6,6 +6,7 @@ This object contains all functionality concerning console (the console as a whol
 
 ## HTML objects related to console
 input id="consoleInput" - the user input. It's always focused
+
 input id="autocomplete" - a "shadow" of the consoleInput, it lies beneath it and has a slightly darker font
 
 ## Event listeners
@@ -29,7 +30,7 @@ Note: CC means current console, the console user is currently in.
 
 **addConsole** - operates the Console constructor - creates console with given parameters and appends it as a child of the CC
 
-**confirm** - a special case of console creation - a console whose sole purpose is a yes or no question
+**question** - a special case of console creation - a console whose sole purpose is a question with strictly defined answers, each invoking its callback, e.g. yes or no confirmation
 
 **getConsole** - gets the CC, or a console with given address (if supplied as an parameter)
 

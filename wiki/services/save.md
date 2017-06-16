@@ -1,7 +1,7 @@
 # Save
 save.js is a directly defined object with methods concerning saving and loading.
 
-**savePrepare** - prepares the data that should be saved (State (stripped of console tree) and Game.state) as JSON
+**savePrepare** - prepares the data that should be saved (State (stripped of console tree and address) and Game.state) as JSON
 
 **loadFinish** - evaluates the loaded data and initiates the console
 

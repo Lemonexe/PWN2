@@ -15,7 +15,7 @@ function init() {
 	time = new Time();
 	save.loadLocal();
 	
-	//DEVELOPMENT
+	//---DEVELOPMENT---
 	controller.addCmdsByTags('dev');
 };
 window.onload = init;
@@ -39,7 +39,7 @@ function State() {
 	//history of commands as they were entered by user (mostly for autocomplete)
 	this.history = [];
 
-	//options
+	//options, they are stored as identifier: {value: anything, description: 'this option lets you lorem ipsum'}
 	this.options = {};
 };
 
@@ -91,8 +91,8 @@ Object.defineProperty(Array.prototype, 'getObj', {
 
 /*
 EVERYTHING BELOW IS A TEMPORARY EXPERIMENT.
-When you're comitting, comment them!
-Working experiments shouldn't be commited to github...
+When you're committing, comment them!
+Working experiments shouldn't be committed to github...
 */
 
 /*

@@ -1,6 +1,6 @@
 
 try {
-	eval('const pole=[1,2];for(let item of pole){let arrow=pole.filter(item2 => item2===item);}');
+	eval('const pole=[1,2];const str =`asdf ${pole[0]}`;for(let item of pole){let arrow=pole.filter(item2 => item2===item);}');
 }
 catch(err) {
 	document.write('<h1>PWN cannot be executed in your internet browser :-(</h1>'

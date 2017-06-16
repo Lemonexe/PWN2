@@ -17,6 +17,7 @@ var cmds = {
 			tags = [tags];
 		}
 		let self = this;
+		//all attributes of cmds (not methods) to array
 		let cmds = Object.keys(self)
 			.map(item => self[item])
 			.filter(item => typeof item !== 'function')
@@ -62,7 +63,7 @@ var cmds = {
 				render.renderConsole();
 			}
 			else{
-				controller.log('Console ' + arg + ' not found!');
+				controller.log(`Console ${arg} not found!`);
 			}
 		}
 	},
@@ -72,14 +73,23 @@ var cmds = {
 		tags: ['dev'],
 		description: 'This command creates a subconsole with the argument as a name.',
 		callback: function(arg) {
-			if(arg) {
-				controller.addConsole(arg, cmds.select('general'));
-				controller.log('Console ' + arg + ' created!');
-
+			controller.addConsole(arg, cmds.select('general').concat(cmds.select('dev')));
+			controller.log(`Console ${arg} created.`);
+		}
+	},
+	rm: {
+		command: 'rm',
+		arg: 'string',
+		tags: ['dev'],
+		description: 'This command removes subconsole by its name.',
+		callback: function(arg) {
+			if(controller.getConsole().children.getObj('name', arg)) {
+				controller.deleteConsole(arg);
+				controller.log(`Console ${arg} has been deleted.`);
 			}
 			else {
-				controller.log('You need to supply a valid identifier of the console...');
-			}
+				controller.log(`Console ${arg} not found!`);
+			}			
 		}
 	},
 	ls: {
@@ -95,17 +105,17 @@ var cmds = {
 		tags: ['general'],
 		description: 'This command lets you change game options (they will be saved).',
 		callback: function() {
-			controller.addConsole('options', [
-				{command: 'exit', description:'Exits the options interface.', callback: function() {
-					state.address.pop();
-					render.renderConsole();
-				}},
-				{command: 'dev', description: 'Type nothing or anything to disable or activate.', callback: function(arg) {
-					state.options.dev = !!arg;
-				}}
-			]);
-			state.address.push('options');
-			cmds.help.callback();
+			let exit = {command: 'exit', callback: function(arg) {
+				controller.deleteConsole();
+				render.renderConsole();
+			}};
+
+			controller.question('options', 'You can set these options or exit this menu:', [
+					exit,
+					{command: 'dev', description: 'Type nothing or anything to disable or activate', callback: function(arg) {state.options.dev = !!arg;}}
+					//options could even be nested if needed. There would be an option that doesn't set anything, but opens another controller.question
+				]
+			);
 		}
 	},
 	help: {
@@ -119,7 +129,7 @@ var cmds = {
 					entry += ': ' + item.description;
 				}
 				if(item.tags && item.tags.length > 0) {
-					entry += ' (Tags: ' + item.tags.join(', ') + ')';
+					entry += ` (Tags: ${item.tags.join(', ')})`;
 				}
 				return entry + '<br>';
 			}
@@ -128,17 +138,17 @@ var cmds = {
 			if(arg) {
 				match = controller.getConsole().commands.filter(item => item.command === arg);
 				if(match.length === 0) {
-					match = controller.getConsole().commands.filter(item => item.tags && item.tags.indexOf(arg) > -1);
+					match = controller.getConsole().commands.filter(item => (item.tags && item.tags.indexOf(arg) > -1));
 				}
 				if(match.length === 0) {
-					controller.log('Command ' + arg + ' not found!');
+					controller.log(`Command ${arg} not found!`);
 					return;
 				}
 			}
 			else {
 				match = controller.getConsole().commands;
 			}
-			controller.log(match.length + ' commands found:<br>');
+			controller.log(`${match.length} command${match.length > 1 ? 's' : ''} found:<br>`);
 			match.forEach(item => controller.log(buildEntry(item)));
 		}
 	},
@@ -208,9 +218,13 @@ var cmds = {
 		tags: ['dev'],
 		description: 'This command asks for your confirmation. You can answer yes or no.',
 		callback: function(arg) {
-			controller.confirm(
-				function() {controller.log('Thanks for your confirmation!');},
-				function() {controller.log('Oh well, thanks for answering anyway..');}
+			controller.question(
+				'confirm',
+				'Do you want to confirm this?',
+				[
+					{command: 'yes', callback: function() {controller.log('Thanks for your confirmation!');}},
+					{command: 'no', callback: function() {controller.log('Understandable, have a great day!');}}
+				]
 			);
 		}
 	}

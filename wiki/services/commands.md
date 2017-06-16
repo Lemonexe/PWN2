@@ -10,7 +10,7 @@ Here is an example of command with all obligatory properties:
 
 ```javascript
 key: {
-	command: 'command_keyword',//this is the invoking code
+	command: 'command_keyword',//this is the invoking code. LOWER CASE!!!
 	tags: ['tag1', 'tag2'],
 	description: 'Here goes the description of the command (used in help).',
 	callback: function() {

@@ -9,7 +9,7 @@ function Render() {
 	this.width = 0;
 	this.height = 0;
 
-	//
+	//switches view between console and map
 	this.switchTab = function(tab) {
 		state.tab = tab;
 
@@ -70,7 +70,7 @@ function Render() {
 		let obj = geto('console');
 		obj.scrollTop = obj.scrollHeight - obj.clientHeight;
 
-		geto('consoleInput').focus();
+		if(state.tab === 'console') {geto('consoleInput').focus();}
 		geto('consoleInput').style.width = (this.width - geto('consoleAddress').offsetWidth - 30) + 'px';
 	};
 
@@ -83,6 +83,8 @@ function Render() {
 
 
 	//EVENT LISTENERS
-	geto('consoleInput').onblur = function() {geto('consoleInput').focus();};
+	geto('consoleInput').onblur = function() {
+		if(state.tab === 'console') {geto('consoleInput').focus();}
+	};
 	window.onresize = function() {render.autoResize();};
 };

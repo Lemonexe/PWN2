@@ -1,9 +1,5 @@
+<<<DONE IN THIS COMMIT>>>
 <<<SMALL CHANGES>>>
-better options
-render.md
-
-
-
 <<<HUGE CHANGES>>>
 STATISTICS APP
 	php které přijímá ajaxi ze hry - sbírá statistiky a ukládá je do databáze

@@ -3,8 +3,11 @@ PWN, third attempt
 
 ## Application structure
 PWN consists of two applications, which are separate, but share some componenets - **Game** and **Admin**
+
 ## Game
-The game itself, it's a HTML/JS application, but it needs to be run on a server because of AJAX requests for gamedata, which is stored in JSON.
+The game itself. It's a HTML/JS application, but it needs to be run on a server because of AJAX requests for gamedata, which is stored in JSON.
+There is also a PHP script for statistics that can be deployed on server...
+
 ### Code structure
 The main file is [**engine.js**](wiki/engine.md). The code is then structured into three main objects, which are described in details on their own pages:
 
@@ -18,12 +21,21 @@ The main file is [**engine.js**](wiki/engine.md). The code is then structured in
 
 State is saved in two objects - state of GUI (command history etc.) is stored in [**State object**](wiki/engine.md), everything related to the game character is stored in `Game.state`.
 
+[**statistics.php**](wiki/statistics.md) is a simple PHP script to save statistics about players. Data is collected by the game application and sent as AJAX post requests.
+
 ## Admin
 ### doesn't exist yet!!!
 This application contains a backend PHP application and frontend HTML/JS application.
-It has a simple registration system to access the administration interface.
+It has a very simple authentication system to access the administration interface, which is then used to create the game content.
 
 ~~More details [here](wiki/admin.md)~~
 
 ## General development practices
-- all development-related code should be marked with a comment like //development
+This is just an opinion of Lemonexe...
+- all development-related code should be marked with this comment: `//---DEVELOPMENT---`. That way all development related code can be easily found.
+- temporary experiments should be at least commented (but rather deleted) before committing
+- the code should work in important modern browsers (Chrome, FF, Edge, Safari). Support for IE6 and alike is dropped because I really enjoy ECMA6:
+  - generation of strings interlaced with many variables should be done using Template literals for clarity
+  - arrow functions should be used in cases where the function doesn't do anything but return a value, which is a simple expression
+- function that generate objects should be constructors, not factories. The code is more clear that way.
+- ternary conditional operator shouldn't be used if the expresions are very long, it makes the code confusing.
