@@ -8,15 +8,18 @@ ENGINE.JS
 var state, controller, render, game, time;
 
 function init() {
+	time = new Time();
 	controller = new Controller();
 	state = new State();
 	render = new Render();
 	game = new Game();
-	time = new Time();
 	save.loadLocal();
+
+	loadGameFiles();
 	
 	//---DEVELOPMENT---
 	controller.addCmdsByTags('dev');
+	render.switchTab('console');
 };
 window.onload = init;
 
@@ -45,6 +48,53 @@ function State() {
 
 
 
+//LOAD GAME FILES, TEMPORARY CODE
+function loadGameFiles() {
+	let files = 0;
+	let filesLength = 2;
+	let finish = function() {
+		if(files === filesLength) {
+			controller.log('All data files are loaded!');
+			time.addEvent('FPS', 'interval', 1000/20, function() {if(state.tab === 'map') {render.renderMap();}});
+
+			//some rework on game.map - instead of texture names there will be a reference to texture object.
+			Object.keys(game.map).forEach(function(key) {
+				game.map[key].forEach(function(mapObj) {
+					if(mapObj.texture) {
+						let ref = render.textures.getObj('name', mapObj.texture);
+						mapObj.texture = ref ? ref : false;
+					}
+				});
+			});
+			
+			//player object
+			let ref = render.textures.getObj('name', game.state.player.texture);
+			game.state.player.texture = ref ? ref : false;
+		}
+	}
+	JSONload('data/textures.json', function(data) {
+		for(let d of data) {
+			if(typeof d.ascii === 'string') {
+				d.ascii = ascii.convert(d.ascii);
+			}
+			else {
+				d.ascii = d.ascii.map(item => ascii.convert(item));
+			}
+		}
+		render.textures = data;
+		files++;
+		finish();
+	});
+	JSONload('data/map.json', function(data) {
+		game.map = data;
+		game.activeZone = data['test-level'];
+		files++;
+		finish();
+	});
+}
+
+
+
 //	GENERALY USED UTILS
 
 //geto is quite self-explanatory, it serves merely as a shortcut to DOM
@@ -65,6 +115,14 @@ function AJAXload(url) {
 			}
 		};
 	});
+}
+
+//a thenable function that saves data to the server (for statistics)
+function AJAXsave(url, data) {
+	let xobj = new XMLHttpRequest();
+	xobj.open('POST', url, true);
+	xobj.setRequestHeader('Content-type', 'application/json');
+	xobj.send(JSON.stringify(data));
 }
 
 //superstructure above AJAXload - this function loads a JSON and executes callback function on it, given the parsed object as an argument

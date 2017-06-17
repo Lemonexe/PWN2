@@ -1,14 +1,14 @@
 <<<DONE IN THIS COMMIT>>>
 <<<SMALL CHANGES>>>
+better fileLoading
+proper code commentary
+předělat kolize čtverců. Takhle to nedává smysl - topleftCorner rozložit na top, left atd. a pak zohlednit všechny možnosti zasahování hrany do kamery
+game.md
+
 <<<HUGE CHANGES>>>
 STATISTICS APP
 	php které přijímá ajaxi ze hry - sbírá statistiky a ukládá je do databáze
 
-udělat obecný renderer ascii art mapy pro použití v mapy a static částí konzole, i s barvičkama a animacema
-	jak bude vypadat datová struktura ascii artu?
-	jaký bude výstup? Asi na to musí být definovaný <div> s přesně definovanou velikostí & pozicí & overflow:hidden
-herní mapa - kolekce objektů, které mají sprite a polohu
-	její vykreslování - buďto každý ascii art za sebe, nebo jí agregovat v jeden ascii art a ten vykreslit
 fúze konzole a ascii - konzole se statickou částí (ascii art mapou)
 game objekt - tam není vůbec nic
 	obecný constructor na: player, postavu, inventář, předmět

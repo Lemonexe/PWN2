@@ -20,6 +20,8 @@ Here are functions that are either ubiquitous enough to deserve being a global v
 
 **AJAXload** - sends a GET call to url and returns a promise, which is resolved as the response
 
+**AJAXsave** - sends a POST call to url with data. Doesn't expect any answer at all.
+
 **JSONload** - operates the AJAXload - it parses the response as a JSON and executes callback upon it.
 
 **Array.prototype.getObj** - custom extension of the Array prototype. It's used for an array of objects - it searches itself and returns the object that contains given *key*: *value*.

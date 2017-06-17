@@ -9,6 +9,16 @@ function Render() {
 	this.width = 0;
 	this.height = 0;
 
+	//size of character in pixels - constant for Courier New @13px. I know, it's absolutely horrendous!
+	this.charWidth = 8;
+	this.charHeight = 16;
+
+
+	//this array contains control objects for ASCII art in console. Each such image has one control object here
+	this.activeMaps = [];
+
+
+
 	//switches view between console and map
 	this.switchTab = function(tab) {
 		state.tab = tab;
@@ -52,8 +62,11 @@ function Render() {
 		geto('game').style.left = ((available[0] - width)/2) + 'px';
 		geto('game').style.top = ((available[1] - height)/2) + 'px';
 
-		geto('console').style.width = (width - 4) + 'px';
-		geto('console').style.height = (height - 20) + 'px';
+		geto('console').style.width = (width - 4) + 'px';//padding 2px left & right
+		geto('console').style.height = (height - 20) + 'px';//address and input
+
+		geto('map').style.width = width + 'px';
+		geto('map').style.height = height + 'px';
 
 		this.renderConsole();
 	};
@@ -72,6 +85,79 @@ function Render() {
 
 		if(state.tab === 'console') {geto('consoleInput').focus();}
 		geto('consoleInput').style.width = (this.width - geto('consoleAddress').offsetWidth - 30) + 'px';
+	};
+
+	//this function finds out where is camera and how big is screen. Then it filters all objects from activeZone that are within screen, adds player and draws them to map using the createASCIIelement function
+	this.renderMap = function() {
+		//this paragraph aims to enumerate top left corner and bottom right corner of the div id="map", not in pixels but in characters
+		let camera = game.camera();
+		let width = this.width/this.charWidth;
+		let height = this.height/this.charHeight;
+		let top = camera.top - height/2;
+		let left = camera.left - width/2;
+		let bottom = top + height;
+		let right = left + width;
+
+		//now we need to prepare a function that creates a div for each item on map, it will be applied later. h,w,gh,gw are just shortcuts
+		let h = render.charHeight;
+		let w = render.charWidth;
+		let gh = Math.round(this.height/2);
+		let gw = Math.round(this.width/2);
+
+		let createDIV = function(item) {
+			let top = item.top*h - camera.top*h + gh;
+			let left = item.left*w - camera.left*w + gw;
+			let height = item.texture.height*h;
+			let width = item.texture.width*w;
+			let z = (typeof item.z === 'number') ? item.z : 1;
+			let innerHTML = render.getASCII(item.texture);
+
+			return `<div class="ascii" style="top: ${top}px;left: ${left}px;height: ${height}px;width: ${width}px;z-index: ${z};">${innerHTML}</div>`;
+		};
+
+		//filter objects from game.activeZone that are at least partially within screen, add player and convert them all
+		let renderable = game.activeZone
+			.filter(function(item) {
+				if(!item.texture) {return false;}
+
+				//whether top left corner of the item is within screen limits
+				let topleftCorner =
+					(item.top >= top) &&
+					(item.top <= bottom) &&
+					(item.left >= left) &&
+					(item.left <= right);
+
+				//whether bottom right corner of the item is within screen limits
+				let bottomrightCorner =
+					(item.top + item.texture.height >= top) &&
+					(item.top + item.texture.height <= bottom) &&
+					(item.left + item.texture.width >= left) &&
+					(item.left + item.texture.width <= right);
+
+				//whether the item is larger than screen and is actually all over the screen
+				let overWholeScreen =
+					((item.top < top) &&
+					(item.top + item.texture.height > bottom)
+					) || (
+					(item.left < left) &&
+					(item.left + item.texture.width > right));
+
+				//at least one is true -> item will be rendered
+				return topleftCorner || bottomrightCorner || overWholeScreen;
+			});
+		renderable.push(game.state.player);
+		geto('map').innerHTML = renderable.map(item => createDIV(item)).join('');
+	};
+
+	//this functions handles ascii animations - takes a texture and returns the ascii that is supposed to be drawn right now
+	this.getASCII = function(texture) {
+		if(typeof texture.ascii === 'string') {
+			return texture.ascii;
+		}
+		else if(typeof texture.ascii === 'object') {
+			//index of animation
+			return texture.ascii[Math.floor((time.time/texture.int) % texture.ascii.length)];
+		}
 	};
 
 

@@ -20,17 +20,7 @@ function Time() {
 		callback: function() {}
 	}
 	*/
-	this.events = [
-		{
-			name: 'renderFPS',
-			type: 'interval',
-			duration: 50,
-			zero: 0,
-			callback: function() {
-				//controller.log('fps');
-			}
-		}
-	];
+	this.events = [];
 
 	//CONSTRUCTOR for timed events. Always use with the 'new' operator!
 	this.timeEvent = function (name, type, duration, callback) {
@@ -39,6 +29,16 @@ function Time() {
 		this.duration = duration;
 		this.zero = time.time;
 		this.callback = callback;
+	};
+
+	//operates the timeEvent constructor. An easier way to create a time event
+	this.addEvent = function (name, type, duration, callback) {
+		this.events.push(new this.timeEvent(name, type, duration, callback));
+	};
+
+	//deletes event by name
+	this.deleteEvent = function(name) {
+		this.events = this.events.filter(item => item.name !== name);
 	};
 
 	//this function is fired each game tick and iterates through all time events (and execute them)

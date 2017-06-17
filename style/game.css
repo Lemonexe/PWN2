@@ -2,6 +2,12 @@
 CSS for the game
 */
 
+
+/*
+CLASSES
+	general is applied to body, input textfield and such
+	ascii is 
+*/
 .general {
 	background-color: rgb(30,30,30);
 	color: rgb(171, 171, 171);
@@ -12,6 +18,14 @@ CSS for the game
 	font-size: 13px;
 }
 
+.ascii {
+	position: absolute;
+}
+
+/*
+IDS
+	see index.html
+*/
 #hidden {
 	display: none;
 }
@@ -27,7 +41,7 @@ CSS for the game
 
 	overflow: auto;
 
-	display: inline;
+	display: none;
 
 	padding-left: 2px;
 	padding-right: 2px;
@@ -56,6 +70,13 @@ CSS for the game
 	outline: none;
 	color: rgb(87, 87, 87);
 	/*formerly 96*/
+}
+
+#map {
+	position: absolute;
+
+	display: none;
+	overflow: hidden;
 }
 
 /*

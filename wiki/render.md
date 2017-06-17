@@ -14,19 +14,29 @@ If view = console, consoleInput will be focused all the time thanks to this func
 ### onresize
 Resizes the game when the window is resized
 
-## Methods and properties
+## Properties
 
 **width, height** - in these integers width and height of the **div id="game"** is stored
 
-**switchTab** - method to switch view between console and map (current view stored in state.tab)
+**charWidth, charHeight** - constants describing size of a character, applies to Courier New 13px
 
-**getAvailableSize** - method that returns available dimensions of the game viewport
+**activeMaps** - array that contains control objects for Ascii art in console. Each such image has one control object here
 
-**resize** - method that resizes the whole game to supplied dimensions
+## Methods
 
-**autoresize** - method that operates resize to resize the game to 80% of available dimensions
+**switchTab** - switches view between console and map (current view stored in state.tab)
 
-**renderConsole** - method that renders the console output and the last line, where the address and text input lies
+**getAvailableSize** - returns available dimensions of the game viewport
+
+**resize** - resizes the whole game to supplied dimensions
+
+**autoresize** - operates resize to resize the game to 80% of available dimensions
+
+**renderConsole** - renders the console output and the last line, where the address and text input lies
+
+**renderMap** - renders the game map from game.activeZone
+
+**getASCII** - gets an ascii art string from texture object (thus handles animations)
 
 ## Concerned HTML elements
 

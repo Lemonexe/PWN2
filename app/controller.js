@@ -31,17 +31,18 @@ function Controller() {
 	//keyBinds for each game tab
 	this.keyBinds = {
 		map: {
-			'37': function() {},//left
-			'38': function() {},//up
-			'39': function() {},//right
-			'40': function() {},//down
+			'37': function() {game.move('left');},//left
+			'38': function() {game.move('up');},//up
+			'39': function() {game.move('right');},//right
+			'40': function() {game.move('down');},//down
+			'27': function() {render.switchTab('console');}//escape
 		},
 		console: {
 			'13': function() {controller.processCommand();},//enter
 			'38': function() {controller.moveInHistory(true);},//up
 			'40': function() {controller.moveInHistory(false);},//down
 			'9': function() {controller.autocompleteUse();},//tab
-			'27': function() {}//escape
+			'27': function() {render.switchTab('map');}//escape
 		}
 	};
 
