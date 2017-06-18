@@ -1,0 +1,79 @@
+/*
+FILELOADER.JS
+	This is a single object with functions concering loading of game data
+*/
+
+var fileLoader = {
+	//files loaded yet, number of all files to be loaded
+	files: 0,
+	filesLength: 0,
+
+	//start loading files by reading config.json (a mandatory file!), interpret and store the gameInitCode and load all files listed in config.json
+	init: function() {
+		JSONload('data/config.json', function(data) {
+			fileLoader.gameInitCode = new Function(data.init);
+			fileLoader.filesLength = data.files.length;
+
+			for(let f of data.files) {
+				JSONload(f.url, function(data) {
+					if(f.onload && fileLoader.hasOwnProperty(f.onload)) {
+						fileLoader[f.onload](data);
+					}
+					fileLoader.files++;
+					fileLoader.finish();
+				});
+			}
+		});
+	},
+
+	//checks whether all files are loaded and if so, finishes the loading process
+	finish: function() {
+		if(this.files === this.filesLength) {
+			this.remapGameMap();
+			this.gameInitCode();
+			time.addEvent('FPS', 'interval', 1000/20, function() {if(state.tab === 'map') {render.renderMap();}});
+		}
+	},
+
+	//some rework on game.map - instead of texture names there will be a reference to texture object.
+	remapGameMap: function() {
+		Object.keys(game.map).forEach(function(key) {
+			game.map[key].forEach(function(mapObj) {
+				if(mapObj.texture) {
+					let ref = render.textures.getObj('name', mapObj.texture);
+					mapObj.texture = ref ? ref : false;
+				}
+			});
+		});
+		
+		//player object
+		let ref = render.textures.getObj('name', game.state.player.texture);
+		game.state.player.texture = ref ? ref : false;
+	},
+
+	//processing map.json is quite simple...
+	processMap: function(data) {game.map = data;},
+
+	//processing textures.json means converting strings with .ans files to HTML strings, using the ascii.convert
+	processTextures: function(data) {
+		for(let d of data) {
+			if(typeof d.ascii === 'string') {
+				d.ascii = ascii.convert(d.ascii);
+			}
+			else if(typeof d.ascii === 'object') {
+				d.ascii = d.ascii.map(item => ascii.convert(item));
+			}
+		}
+		render.textures = data;
+	},
+
+	//classes is a very large collection from various files, which are all merged into game.classes
+	processClasses: function(data) {
+		if(!game.classes) {
+			game.classes = data;
+		}
+		else {
+			Object.assign(game.classes, data);
+		}
+	}
+};

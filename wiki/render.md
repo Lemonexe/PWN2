@@ -20,6 +20,8 @@ Static, invariable configuration of appearance is in *style/game.css*
 
 **activeMaps** - array that contains control objects for Ascii art in console. Each such image has one control object here
 
+**textures** - all available textures, this array is populated by game data upon loading of game
+
 ## Methods
 
 **switchTab** - switches view between console and map (current view stored in state.tab)

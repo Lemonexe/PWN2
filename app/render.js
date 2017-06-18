@@ -13,11 +13,10 @@ function Render() {
 	this.charWidth = 8;
 	this.charHeight = 16;
 
-
 	//this array contains control objects for ASCII art in console. Each such image has one control object here
 	this.activeMaps = [];
 
-
+	//this.textures - will be populated later
 
 	//switches view between console and map
 	this.switchTab = function(tab) {

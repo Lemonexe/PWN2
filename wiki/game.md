@@ -12,7 +12,7 @@ This object contains all functionality concerning gameplay: 1) basic mechanics l
 
 **classes** - all classes of entities of any sort. Here are all types of items on gamemap, but also inventory items, enemies, skills etc. It is populated by game data upon loading of game
 
-**activeZone** - a portion of game.map that the player currently resides in, for purposes of rendering and collisions
+**activeZone** - a portion of game.map that the player currently resides in, for purposes of rendering and collisions. It is populated whenever a game area is loaded
 
 ## Methods
 

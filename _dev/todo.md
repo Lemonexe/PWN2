@@ -1,5 +1,4 @@
 # Small changes
-better fileLoading
 
 # Huge changes
 fusion of console a ascii - console with static parts (ascii art maps)
@@ -12,6 +11,7 @@ gameObject classes - collisions, onWalk
 
 **ADMIN APP** with frontend (most of the app) and backend (just for saving)
 - basic authentication
+- config.json
 - adding textures
 - adding gameObject classes
 - creating gameMap

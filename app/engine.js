@@ -13,13 +13,15 @@ function init() {
 	state = new State();
 	render = new Render();
 	game = new Game();
+
+	//if possible, load save from local storage
 	save.loadLocal();
 
-	loadGameFiles();
+	//load files with game and execute proper code on them
+	fileLoader.init();
 	
 	//---DEVELOPMENT---
 	controller.addCmdsByTags('dev');
-	render.switchTab('console');
 };
 window.onload = init;
 
@@ -45,54 +47,6 @@ function State() {
 	//options, they are stored as identifier: {value: anything, description: 'this option lets you lorem ipsum'}
 	this.options = {};
 };
-
-
-
-//LOAD GAME FILES, TEMPORARY CODE
-//Object.assign(target, ...sources) to merge objects
-function loadGameFiles() {
-	let files = 0;
-	let filesLength = 2;
-	let finish = function() {
-		if(files === filesLength) {
-			controller.log('All data files are loaded!');
-			time.addEvent('FPS', 'interval', 1000/20, function() {if(state.tab === 'map') {render.renderMap();}});
-
-			//some rework on game.map - instead of texture names there will be a reference to texture object.
-			Object.keys(game.map).forEach(function(key) {
-				game.map[key].forEach(function(mapObj) {
-					if(mapObj.texture) {
-						let ref = render.textures.getObj('name', mapObj.texture);
-						mapObj.texture = ref ? ref : false;
-					}
-				});
-			});
-			
-			//player object
-			let ref = render.textures.getObj('name', game.state.player.texture);
-			game.state.player.texture = ref ? ref : false;
-		}
-	}
-	JSONload('data/textures.json', function(data) {
-		for(let d of data) {
-			if(typeof d.ascii === 'string') {
-				d.ascii = ascii.convert(d.ascii);
-			}
-			else {
-				d.ascii = d.ascii.map(item => ascii.convert(item));
-			}
-		}
-		render.textures = data;
-		files++;
-		finish();
-	});
-	JSONload('data/map.json', function(data) {
-		game.map = data;
-		game.activeZone = data['test-level'];
-		files++;
-		finish();
-	});
-}
 
 
 
@@ -147,16 +101,3 @@ Object.defineProperty(Array.prototype, 'getObj', {
 		return arr[0];
 	}
 });
-
-/*
-EVERYTHING BELOW IS A TEMPORARY EXPERIMENT.
-When you're committing, comment them!
-Working experiments shouldn't be committed to github...
-*/
-
-/*
-Example how to load a JSON
-JSONload('data/testdata.json', function(result) {
-	alert(result.someString);
-});
-*/
