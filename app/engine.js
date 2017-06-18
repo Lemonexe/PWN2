@@ -49,6 +49,7 @@ function State() {
 
 
 //LOAD GAME FILES, TEMPORARY CODE
+//Object.assign(target, ...sources) to merge objects
 function loadGameFiles() {
 	let files = 0;
 	let filesLength = 2;

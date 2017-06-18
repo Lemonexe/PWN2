@@ -8,11 +8,9 @@ Static, invariable configuration of appearance is in *style/game.css*
 
 ## Event listeners
 
-### consoleInput.onblur
-If view = console, consoleInput will be focused all the time thanks to this function
+**consoleInput.onblur** - if view = console, consoleInput will be focused all the time thanks to this function
 
-### onresize
-Resizes the game when the window is resized
+**onresize** - resizes the game when the window is resized
 
 ## Properties
 

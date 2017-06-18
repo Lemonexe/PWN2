@@ -13,6 +13,7 @@ function Controller() {
 		controller.autocomplete();
 	};
 
+	//---DEVELOPMENT---
 	window.onerror = function(error) {
 		controller.log('Error: ' + error);
 		return true;
@@ -77,6 +78,7 @@ function Controller() {
 	//this is a template for simple question request, also used in options. See cmds.confirm for an example
 	//ARGS: name = name of subconsole, info = explanation what is expected from user, answers = array of commands
 	this.question = function(name, info, answers) {
+		//add controller.deleteConsole(); to callback
 		for(let a of answers) {
 			let f = a.callback;
 			a.callback = function() {
@@ -85,15 +87,16 @@ function Controller() {
 			};
 		}
 
+		//addConsole with answers, enter it, log info and list answers
 		controller.addConsole(name, answers);
 		state.address.push(name);
 
-		if(info){controller.log(info);}
+		if(info) {controller.log(info);}
 		answers.forEach(item => controller.log(item.command + (item.description ? `: ${item.description}` : '')));
 		render.renderConsole();
 	};
 
-	//returns the console according to address, or the current console if no address supplied.
+	//returns the console according to address (array of strings, as in state.address), or the current console if no address supplied.
 	this.getConsole = function(address) {
 		if(!address) {address = state.address;}
 		let currentConsole = state.tree;
@@ -107,6 +110,7 @@ function Controller() {
 		return currentConsole;
 	};
 
+	//generate address of console (used in processCommand and render.renderConsole)
 	this.generateAddress = function() {
 		return state.address.join('/') + '&gt;';
 	};
@@ -124,20 +128,24 @@ function Controller() {
 
 	//general function to analyze text written by user and execute the command
 	this.processCommand = function() {
+		//get input and clear the HTML elements
 		let value = geto('consoleInput').value.trim();
 		geto('consoleInput').value = '';
 		geto('autocomplete').value = '';
 
 		if(!value) {return;}
 
+		//matches first word, which will necessarily be the command, all other words are the argument.
 		let command = value.match(/^[^\s]+\s*/);
 		command = command ? command[0] : '';
 		
 		let arg = value.replace(command, '');
 		command = command.trim().toLowerCase();
 
+		//the input will be logged
 		this.log(this.generateAddress() + value);
 		
+		//input will be either added to history or, if it is already there, moved at the end of it
 		let index = state.history.indexOf(value);
 		if(index === -1) {
 			state.history.push(value);
@@ -147,13 +155,15 @@ function Controller() {
 			state.history.push(value);
 		}
 
+		//find the matching command in the current console commands
 		let match = this.getConsole().commands.getObj('command', command);
 
 		if(!match) {
 			this.log(`Command ${command} not found!`);
 			return;
 		}
-		
+
+		//now that the command is found, argument is processed according to requirements of the command and FINALLY the command is called
 		if(match.arg === 'array') {
 			arg = arg.split(/\s+/);
 
@@ -180,7 +190,7 @@ function Controller() {
 		}
 	};
 
-	//superstructure above addCmds - adds Cmds by tags
+	//superstructure above addCmds - adds Cmds by tags (commands that have all the tags supplied (one tag as a string or array of tags))
 	this.addCmdsByTags = function(tags) {
 		this.addCmds(cmds.select(tags));
 	};
@@ -193,20 +203,22 @@ function Controller() {
 		controller.getConsole().commands = controller.getConsole().commands.filter(item => names.indexOf(item.command) === -1);
 	};
 
-	//superstructure above deleteCmds - delete Cmds by list of tags
+	//superstructure above deleteCmds - delete Cmds by list of tags (commands that have all the tags supplied (one tag as a string or array of tags))
 	this.deleteCmdsByTags = function(tags) {
 		let names = cmds.select(tags)
 			.map(item => item.command);
 		this.deleteCmds(names);
 	};
 
-	//this lets you choose commands from history. You either enter the history, or, if you're already in it, move further or closer
+	//this lets you choose commands from history. You either enter the history, or, if you're already in it, move further or closer. Argument up = true/false (whether up/down arrow was pressed)
 	this.moveInHistory = function(up) {
 		if(state.history.length === 0) {return;}
 
+		//get the current input and check whether this exact string is in history
 		let value = geto('consoleInput').value.trim();
 		let index = state.history.indexOf(value);
 
+		//if it isn't in history, input will be filled with the last item in history. If it is, user is already moving in history
 		let res = '';
 		if(index === -1) {
 			res = up ? state.history[state.history.length - 1] : state.history[0];
@@ -218,7 +230,7 @@ function Controller() {
 		geto('autocomplete').value = '';
 	};
 
-	//this function checks all commands while you're writing and gives you a hint
+	//this function checks all commands while you're writing and gives you a hint. Only invoked when there already are 3 or more characters
 	this.autocomplete = function() {
 		let value = geto('consoleInput').value;
 		let cleanValue = value.trim();
@@ -226,6 +238,8 @@ function Controller() {
 			geto('autocomplete').value = '';
 			return;
 		}
+
+		//find first cmd that contains the cleanValue in its invoking string and fill it in autocomplete input
 		let cmds = this.getConsole().commands.map(item => item.command);
 		let possibleCMD = '';
 

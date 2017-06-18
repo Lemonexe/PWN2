@@ -10,14 +10,11 @@ input id="consoleInput" - the user input. It's always focused
 input id="autocomplete" - a "shadow" of the consoleInput, it lies beneath it and has a slightly darker font
 
 ## Event listeners
-### onkeydown
-Depends on the game tab (console or map, see State), each game tab has its own array of keybinds in *controller.keybinds*.
+**onkeydown** - depends on the game tab (console or map, see State), each game tab has its own array of keybinds in *controller.keybinds*.
 
-### onerror
-Just a small development utility, it writes any error through *controller.log*
+**onerror** - just a small development utility, it writes any error through *controller.log*
 
-### consoleInput.oninput
-Detects change in the console input, triggers the autocomplete method (see below).
+**consoleInput.oninput** - detects change in the console input, triggers the autocomplete method (see below).
 
 ## Methods and properties
 Note: CC means current console, the console user is currently in.

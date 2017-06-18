@@ -44,6 +44,7 @@ function Render() {
 
 	//resizes the whole game, given width and height as arguments
 	this.resize = function(width, height) {
+		//process arguments and save into this
 		width = parseInt(width);
 		height = parseInt(height);
 		if(isNaN(width) || isNaN(height)) {return;}
@@ -56,6 +57,7 @@ function Render() {
 		this.width = width;
 		this.height = height;
 
+		//here comes the resizing itself
 		geto('game').style.width = width + 'px';
 		geto('game').style.height = height + 'px';
 
@@ -73,6 +75,7 @@ function Render() {
 
 	//this function renders the console: generates the text -> renders it -> scrolls down -> resizes and focuses the input
 	this.renderConsole = function() {
+		//generate console output and address
 		let text = '';
 		if(state.console.length !== 0) {
 			text += state.console.join('<br>') + '<br>';
@@ -80,9 +83,11 @@ function Render() {
 		geto('consoleText').innerHTML = text;
 		geto('consoleAddress').innerHTML = controller.generateAddress();
 
+		//scroll to the bottom
 		let obj = geto('console');
 		obj.scrollTop = obj.scrollHeight - obj.clientHeight;
 
+		//focus and resize input (that is dependent on the size of address...)
 		if(state.tab === 'console') {geto('consoleInput').focus();}
 		geto('consoleInput').style.width = (this.width - geto('consoleAddress').offsetWidth - 30) + 'px';
 	};
@@ -115,36 +120,51 @@ function Render() {
 			return `<div class="ascii" style="top: ${top}px;left: ${left}px;height: ${height}px;width: ${width}px;z-index: ${z};">${innerHTML}</div>`;
 		};
 
-		//filter objects from game.activeZone that are at least partially within screen, add player and convert them all
-		let renderable = game.activeZone
-			.filter(function(item) {
-				if(!item.texture) {return false;}
+		//we still need a filtering function that evaluates whether item is at least partially within screen limits
+		let squares = function(item) {
+			if(!item.texture) {return false;}
 
-				//whether top left corner of the item is within screen limits
-				let topleftCorner =
-					(item.top >= top) &&
-					(item.top <= bottom) &&
-					(item.left >= left) &&
-					(item.left <= right);
+			//whether respective edge of the item is within the respective coordinates of camera limits. Doesn't necessarily lie within screen, it can be far away in the other coordinate.
+			let topEdge =
+				(item.top > top) &&
+				(item.top < bottom);
+			let leftEdge =
+				(item.left > left) &&
+				(item.left < right);
+			let bottomEdge =
+				(item.top + item.texture.height > top) &&
+				(item.top + item.texture.height < bottom);
+			let rightEdge =
+				(item.left + item.texture.width > left) &&
+				(item.left + item.texture.width < right);
 
-				//whether bottom right corner of the item is within screen limits
-				let bottomrightCorner =
-					(item.top + item.texture.height >= top) &&
-					(item.top + item.texture.height <= bottom) &&
-					(item.left + item.texture.width >= left) &&
-					(item.left + item.texture.width <= right);
+			//whether the height of the camera is actually inside the height of item. Analogous with width
+			let overHeight =
+				(item.top <= top) &&
+				(item.top + item.texture.height >= bottom);
+			let overWidth =
+				(item.left <= left) &&
+				(item.left + item.texture.width >= right);
 
-				//whether the item is larger than screen and is actually all over the screen
-				let overWholeScreen =
-					((item.top < top) &&
-					(item.top + item.texture.height > bottom)
-					) || (
-					(item.left < left) &&
-					(item.left + item.texture.width > right));
+			//whether the item is within the height of camera. Top and bottom edges are not necessarily inside, it might be overHeight too. Analogous with width
+			let inHeight = topEdge || bottomEdge || overHeight;
+			let inWidth = leftEdge || rightEdge || overWidth;
 
-				//at least one is true -> item will be rendered
-				return topleftCorner || bottomrightCorner || overWholeScreen;
-			});
+			/*at least one is true -> item will be rendered
+				1. topEdge or bottomEdge are within the top and bottom limits of camera AND it the image is at least partially within width of image
+				2. analogous
+				3. the item is all over the screen (no edges are inside the camera!)
+			*/
+			let result =
+				((topEdge || bottomEdge) && inWidth) ||
+				((leftEdge || rightEdge) && inHeight) ||
+				(overHeight && overWidth);
+			return result;
+
+		};
+
+		//filter objects from game.activeZone using, add player and convert them all
+		let renderable = game.activeZone.filter(squares);
 		renderable.push(game.state.player);
 		geto('map').innerHTML = renderable.map(item => createDIV(item)).join('');
 	};

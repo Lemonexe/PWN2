@@ -11,6 +11,9 @@ function Game() {
 	//the whole game map. This attribute will be populated when the map.json is loaded and processed
 	this.map = {};
 
+	//classes of entities of any sort. Here are all types of items on gamemap, but also inventory items, skills etc. Will be populated onload from various files.
+	this.classes = {};
+
 	//a portion of game.map that the player currently resides in, for purposes of rendering and collisions
 	this.activeZone = [];
 
