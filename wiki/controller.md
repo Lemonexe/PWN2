@@ -21,7 +21,7 @@ Note: CC means current console, the console user is currently in.
 
 **keybinds** - see the source code for example...
 
-**Console** - constructor for a console object with given name (displayed in address) and array of command objects. There are other methods operating it, see below.
+**Console** - constructor for a console object with given name (displayed in address), array of command objects *and optionally an ASCII art texture*. There are other methods operating it, see below.
 
 **deleteConsole** - deletes the CC and relocates the user to the parent console
 

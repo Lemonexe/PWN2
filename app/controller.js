@@ -48,13 +48,15 @@ function Controller() {
 	};
 
 	//CONSOLE CONSTRUCTOR - always use with the 'new' operator!
-	this.Console = function(name, cmds) {
+	this.Console = function(name, cmds, ASCII) {
 		//name of the console - part of the address (something like a directory)
 		this.name = name;
 		//commands available when you are in this console
 		this.commands = cmds;
 		//array of subconsoles - members of this array are objects exactly like this one!
 		this.children = [];
+		//optional ASCII art of the console (texture object)
+		if(ASCII) {this.ASCII = ASCII;}
 	};
 
 	//without argument it deletes the current console and moves up in the tree. With argument it deletes subconsole with that name
@@ -69,9 +71,9 @@ function Controller() {
 	};
 
 	//this function acts as a superstructure above the console constructor
-	this.addConsole = function(name, cmds) {
+	this.addConsole = function(name, cmds, ASCII) {
 		if(!controller.getConsole().children.getObj('name', name)) {
-			controller.getConsole().children.push(new controller.Console(name, cmds));
+			controller.getConsole().children.push(new controller.Console(name, cmds, ASCII));
 		}
 	};
 

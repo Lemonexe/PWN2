@@ -18,8 +18,6 @@ Static, invariable configuration of appearance is in *style/game.css*
 
 **charWidth, charHeight** - constants describing size of a character, applies to Courier New 13px
 
-**activeMaps** - array that contains control objects for Ascii art in console. Each such image has one control object here
-
 **textures** - all available textures, this array is populated by game data upon loading of game
 
 ## Methods
@@ -32,7 +30,7 @@ Static, invariable configuration of appearance is in *style/game.css*
 
 **autoresize** - operates resize to resize the game to 80% of available dimensions
 
-**renderConsole** - renders the console output and the last line, where the address and text input lies
+**renderConsole** - renders the console ASCII art, console output and the last line, where the address and text input lies
 
 **renderMap** - renders the game map from game.activeZone
 

@@ -13,9 +13,6 @@ function Render() {
 	this.charWidth = 8;
 	this.charHeight = 16;
 
-	//this array contains control objects for ASCII art in console. Each such image has one control object here
-	this.activeMaps = [];
-
 	//this.textures - will be populated later
 
 	//switches view between console and map
@@ -74,11 +71,19 @@ function Render() {
 
 	//this function renders the console: generates the text -> renders it -> scrolls down -> resizes and focuses the input
 	this.renderConsole = function() {
-		//generate console output and address
 		let text = '';
+
+		//generate ASCII art if there is any
+		let texture = controller.getConsole().ASCII;
+		if(texture) {
+			text += '<div>' + render.getASCII(texture) + '</div>';
+		}
+
+		//generate console output and address
 		if(state.console.length !== 0) {
 			text += state.console.join('<br>') + '<br>';
 		}
+
 		geto('consoleText').innerHTML = text;
 		geto('consoleAddress').innerHTML = controller.generateAddress();
 
@@ -116,7 +121,7 @@ function Render() {
 			let z = (typeof item.z === 'number') ? item.z : 1;
 			let innerHTML = render.getASCII(item.texture);
 
-			return `<div class="ascii" style="top: ${top}px;left: ${left}px;height: ${height}px;width: ${width}px;z-index: ${z};">${innerHTML}</div>`;
+			return `<div style="position: absolute;top: ${top}px;left: ${left}px;height: ${height}px;width: ${width}px;z-index: ${z};">${innerHTML}</div>`;
 		};
 
 		//we still need a filtering function that evaluates whether item is at least partially within screen limits

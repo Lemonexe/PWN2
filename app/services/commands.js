@@ -17,7 +17,7 @@ var cmds = {
 			tags = [tags];
 		}
 		let self = this;
-		//all attributes of cmds (not methods) to array
+		//all properties of cmds (not methods) to array
 		let cmds = Object.keys(self)
 			.map(item => self[item])
 			.filter(item => typeof item !== 'function')
@@ -98,6 +98,16 @@ var cmds = {
 		description: 'This command lists subconsoles of the current console.',
 		callback: function() {
 			controller.getConsole().children.forEach(item => controller.log(item.name));
+		}
+	},
+	asciify: {
+		command: 'asciify',
+		tags: ['dev'],
+		arg: 'string',
+		description: 'This command enriches current console with ASCII art (supply name of the texture)',
+		callback: function(arg) {
+			controller.getConsole().ASCII = render.textures.getObj('name', arg);
+			render.renderConsole();
 		}
 	},
 	options: {

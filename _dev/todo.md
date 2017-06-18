@@ -1,8 +1,6 @@
 # Small changes
 
 # Huge changes
-fusion of console a ascii - console with static parts (ascii art maps)
-
 gameObject classes - collisions, onWalk
 
 **game object**

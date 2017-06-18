@@ -6,7 +6,6 @@ CSS for the game
 /*
 CLASSES
 	general is applied to body, input textfield and such
-	ascii is 
 */
 .general {
 	background-color: rgb(30,30,30);
@@ -16,10 +15,6 @@ CLASSES
 	padding: 0px;
 	margin: 0px;
 	font-size: 13px;
-}
-
-.ascii {
-	position: absolute;
 }
 
 /*
