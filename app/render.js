@@ -76,15 +76,19 @@ function Render() {
 		this.renderConsole();
 	};
 
+	//this is a master rendering function that is executed with FPS timer
+	this.renderFPS = function() {
+		if(state.tab === 'map') {
+			render.renderMap();
+		}
+		else {
+			render.renderConsoleASCII();
+		}
+	};
+
 	//this function renders the console: generates the text -> renders it -> scrolls down -> resizes and focuses the input
 	this.renderConsole = function() {
 		let text = '';
-
-		//generate ASCII art if there is any
-		let texture = controller.getConsole().ASCII;
-		if(texture) {
-			text += '<div>' + render.getASCII(texture) + '</div>';
-		}
 
 		//generate console output and address
 		if(state.console.length !== 0) {
@@ -101,6 +105,19 @@ function Render() {
 		//focus and resize input (that is dependent on the size of address...)
 		if(state.tab === 'console') {geto('consoleInput').focus();}
 		geto('consoleInput').style.width = (this.width - geto('consoleAddress').offsetWidth - 30) + 'px';
+	};
+
+	//this function generates console ASCII art if there is any
+	this.renderConsoleASCII = function() {
+		let texture = controller.getConsole().ASCII;
+		let consoleASCII = geto('consoleASCII');
+		
+		if(texture) {
+			consoleASCII.innerHTML = render.getASCII(texture);
+		}
+		else if(consoleASCII.innerHTML !== '') {
+			consoleASCII.innerHTML = '';
+		}
 	};
 
 	//this function finds out where is camera and how big is screen. Then it filters all objects from activeZone that are within screen, adds player and draws them to map using the createASCIIelement function

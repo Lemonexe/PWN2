@@ -31,10 +31,7 @@ var fileLoader = {
 		if(this.files === this.filesLength) {
 			this.remapGameMap();
 			this.gameInitCode();
-			time.addEvent('FPS', 'interval', 1000/20, function() {
-				if(state.tab === 'map') {render.renderMap();}
-				else if(controller.getConsole().ASCII) {render.renderConsole();}
-			});
+			time.addEvent('FPS', 'interval', 1000/20, function() {render.renderFPS();});
 		}
 	},
 
