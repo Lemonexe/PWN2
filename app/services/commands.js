@@ -103,10 +103,9 @@ var cmds = {
 	asciify: {
 		command: 'asciify',
 		tags: ['dev'],
-		arg: 'string',
 		description: 'This command enriches current console with ASCII art (supply name of the texture)',
 		callback: function(arg) {
-			controller.getConsole().ASCII = render.textures.getObj('name', arg);
+			controller.getConsole().ASCII = arg ? render.textures.getObj('name', arg) : false;
 			render.renderConsole();
 		}
 	},

@@ -25,24 +25,44 @@ function Game() {
 		time.addEvent('movement', 'interval', 1000/10, function() {game.state.player.ready2move = true;});
 	};
 
-	//move the player ---TEMPORARY--- here will be collisions!
+	//move the player. First the theoretical position will be defined and checked for collisions (all triggers will be executed). If everything is all right, it will become real position
 	this.move = function(str) {
 		if(!this.state.player.ready2move) {
 			return;
 		}
-		switch(str) {
-			case 'left':
-				this.state.player.left--;this.state.player.ready2move = false;
-			break;
-			case 'right':
-				this.state.player.left++;this.state.player.ready2move = false;
-			break;
-			case 'up':
-				this.state.player.top--;this.state.player.ready2move = false;
-			break;
-			case 'down':
-				this.state.player.top++;this.state.player.ready2move = false;
-			break;
+
+		let tTop = this.state.player.top;
+		let tLeft = this.state.player.left;
+		if(str === 'right') {tLeft++;}
+		else if(str === 'left') {tLeft--;}
+		else if(str === 'down') {tTop++;}
+		else if(str === 'up') {tTop--;}
+
+		let moveBlocked = false;
+
+		let collision = function(item) {
+			let height = item.texture ? item.texture.height : item.height;
+			let width = item.texture ? item.texture.width : item.width;
+			let itemBottom = item.top + (height ? (height - 1) : 0);
+			let itemRight = item.left + (width ? (width - 1) : 0);
+
+			return (tTop >= item.top) && 
+				(tTop <= itemBottom) && 
+				(tLeft >= item.left) && 
+				(tLeft <= itemRight);
+		};
+
+		for(let item of game.activeZone) {
+			if(item.class && item.class.purposes.indexOf('mapObject') > -1 && collision(item)) {
+				moveBlocked = moveBlocked || item.class.obstacle;
+				if(item.class.onwalk) {item.class.onwalk();}
+			}
+		}
+
+		if(!moveBlocked) {
+			this.state.player.top = tTop;
+			this.state.player.left = tLeft;
+			this.state.player.ready2move = false;
 		}
 	};
 

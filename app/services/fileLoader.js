@@ -16,8 +16,8 @@ var fileLoader = {
 
 			for(let f of data.files) {
 				JSONload(f.url, function(data) {
-					if(f.onload && fileLoader.hasOwnProperty(f.onload)) {
-						fileLoader[f.onload](data);
+					if(f.method && fileLoader.hasOwnProperty(f.method)) {
+						fileLoader[f.method](data);
 					}
 					fileLoader.files++;
 					fileLoader.finish();
@@ -38,13 +38,17 @@ var fileLoader = {
 		}
 	},
 
-	//some rework on game.map - instead of texture names there will be a reference to texture object.
+	//some rework on game.map - instead of texture names there will be a reference to texture object & reference to class object instead of class name
 	remapGameMap: function() {
 		Object.keys(game.map).forEach(function(key) {
 			game.map[key].forEach(function(mapObj) {
 				if(mapObj.texture) {
 					let ref = render.textures.getObj('name', mapObj.texture);
 					mapObj.texture = ref ? ref : false;
+				}
+				if(mapObj.class) {
+					let ref = game.classes[mapObj.class];
+					mapObj.class = ref ? ref : false;
 				}
 			});
 		});
@@ -54,10 +58,23 @@ var fileLoader = {
 		game.state.player.texture = ref ? ref : false;
 	},
 
-	//processing map.json is quite simple...
+	//processing map is simple
 	processMap: function(data) {game.map = data;},
 
-	//processing textures.json means converting strings with .ans files to HTML strings, using the ascii.convert
+	//processing classes means converting onwalk strings to functions
+	processClasses: function(data) {
+		Object.keys(data).forEach(function(key) {
+			if(data[key].onwalk) {
+				data[key].onwalk = new Function(data[key].onwalk);
+			}
+			if(data[key].onclick) {
+				data[key].onclick = new Function(data[key].onclick);
+			}
+		});
+		game.classes = data;
+	},
+
+	//processing textures means converting strings with .ans files to HTML strings, using the ascii.convert
 	processTextures: function(data) {
 		for(let d of data) {
 			if(typeof d.ascii === 'string') {
@@ -68,15 +85,5 @@ var fileLoader = {
 			}
 		}
 		render.textures = data;
-	},
-
-	//classes is a very large collection from various files, which are all merged into game.classes
-	processClasses: function(data) {
-		if(!game.classes) {
-			game.classes = data;
-		}
-		else {
-			Object.assign(game.classes, data);
-		}
 	}
 };

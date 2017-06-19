@@ -1,7 +1,7 @@
 # Small changes
+transparency bugfix
 
 # Huge changes
-gameObject classes - collisions, onWalk
 
 **game object**
 - constructor for Player, Character, Inventory and InventoryItem

@@ -22,7 +22,14 @@ function Render() {
 		['console', 'map'].forEach(item => geto(item).style.display = 'none');
 		geto(tab).style.display = 'block';
 
-		(tab === 'console') ? geto('consoleInput').focus() : geto('consoleInput').blur();
+		if(tab === 'console') {
+			this.renderConsole();
+			geto('consoleInput').focus();
+		}
+		else if(tab === 'map') {
+			this.renderMap();
+			geto('consoleInput').blur();
+		}
 	};
 
 	//obtains available width & height of the window
@@ -114,14 +121,19 @@ function Render() {
 		let gw = Math.round(this.width/2);
 
 		let createDIV = function(item) {
-			let top = item.top*h - camera.top*h + gh;
-			let left = item.left*w - camera.left*w + gw;
-			let height = item.texture.height*h;
-			let width = item.texture.width*w;
-			let z = (typeof item.z === 'number') ? item.z : 1;
-			let innerHTML = render.getASCII(item.texture);
+			let div = document.createElement('div');
 
-			return `<div style="position: absolute;top: ${top}px;left: ${left}px;height: ${height}px;width: ${width}px;z-index: ${z};">${innerHTML}</div>`;
+			div.style.position = 'absolute';
+			div.style.top = (item.top*h - camera.top*h + gh) + 'px';
+			div.style.left = (item.left*w - camera.left*w + gw) + 'px';
+			div.style.height = (item.texture.height*h) + 'px';
+			div.style.width = (item.texture.width*w) + 'px';
+			div.style.zIndex = (typeof item.z === 'number') ? item.z : 1;
+			div.innerHTML = render.getASCII(item.texture);
+			if(item.class && item.class.onclick) {
+				div.onmousedown = item.class.onclick;
+			}
+			return div;
 		};
 
 		//we still need a filtering function that evaluates whether item is at least partially within screen limits
@@ -170,7 +182,11 @@ function Render() {
 		//filter objects from game.activeZone using, add player and convert them all
 		let renderable = game.activeZone.filter(squares);
 		renderable.push(game.state.player);
-		geto('map').innerHTML = renderable.map(item => createDIV(item)).join('');
+
+		//draw renderable elements
+		let map = geto('map');
+		map.innerHTML = '';
+		renderable.forEach(item => map.appendChild(createDIV(item)));
 	};
 
 	//this functions handles ascii animations - takes a texture and returns the ascii that is supposed to be drawn right now
