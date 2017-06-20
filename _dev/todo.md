@@ -3,9 +3,7 @@ transparency bugfix
 
 # Huge changes
 
-**game object**
-- constructor for Player, Character, Inventory and InventoryItem
-  - game.state.player will have common inventory and all game characters
+refactor console ascii to embedded?
 
 **ADMIN APP** with frontend (most of the app) and backend (just for saving)
 - basic authentication

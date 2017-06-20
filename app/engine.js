@@ -19,9 +19,6 @@ function init() {
 
 	//load files with game and execute proper code on them
 	fileLoader.init();
-	
-	//---DEVELOPMENT---
-	controller.addCmdsByTags('dev');
 };
 window.onload = init;
 

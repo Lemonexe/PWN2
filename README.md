@@ -38,5 +38,4 @@ This is just an opinion of Lemonexe...
 - the code should work in important modern browsers (Chrome, FF, Edge, Safari). Support for IE6 and alike is dropped because I really enjoy ECMA6:
   - generation of strings interlaced with many variables should be done using Template literals for clarity
   - arrow functions should be used in cases where the function doesn't do anything but return a value, which is a simple expression
-- function that generate objects should be constructors, not factories. I think the code is more clear that way.
 - even though I love the ternary conditional operator, it shouldn't be used with long expressions, it makes the code confusing.

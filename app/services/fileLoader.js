@@ -49,10 +49,6 @@ var fileLoader = {
 				}
 			});
 		});
-		
-		//player object
-		let ref = render.textures.getObj('name', game.state.player.texture);
-		game.state.player.texture = ref ? ref : false;
 	},
 
 	//processing map is simple

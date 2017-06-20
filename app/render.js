@@ -111,7 +111,7 @@ function Render() {
 	this.renderConsoleASCII = function() {
 		let texture = controller.getConsole().ASCII;
 		let consoleASCII = geto('consoleASCII');
-		
+
 		if(texture) {
 			consoleASCII.innerHTML = render.getASCII(texture);
 		}
@@ -145,7 +145,6 @@ function Render() {
 			div.style.left = (item.left*w - camera.left*w + gw) + 'px';
 			div.style.height = (item.texture.height*h) + 'px';
 			div.style.width = (item.texture.width*w) + 'px';
-			div.style.zIndex = (typeof item.z === 'number') ? item.z : 1;
 			div.innerHTML = render.getASCII(item.texture);
 			if(item.class && item.class.onclick) {
 				div.onmousedown = item.class.onclick;
@@ -196,10 +195,20 @@ function Render() {
 
 		};
 
-		//filter objects from game.activeZone using, add player and convert them all
-		let renderable = game.activeZone.filter(squares);
-		renderable.push(game.state.player);
+		//filter objects from game.activeZone using, sort them by zIndex add player and convert them all
+		let renderable = game.activeZone.filter(squares)
+			.sort(function(a, b) {
+				let aZ = (typeof a.z === 'number') ? a.z : 1;
+				let bZ = (typeof b.z === 'number') ? b.z : 1;
+				return aZ - bZ;
+			});
 
+		renderable.push({
+			top: game.state.player.top,
+			left: game.state.player.left,
+			texture: render.textures.getObj('name', game.state.player.textureName)
+		});
+		
 		//draw renderable elements
 		let map = geto('map');
 		map.innerHTML = '';

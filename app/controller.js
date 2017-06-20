@@ -119,12 +119,14 @@ function Controller() {
 
 	//log writes to console; clear clears the console
 	this.log = function(text) {
+		if(!text) {text = '';}
 		state.console.push(text);
 		render.renderConsole();
 	};
 	this.clear = function() {
 		state.console = [];
 		state.history = [];
+		controller.getConsole().ASCII = false;
 		render.renderConsole();
 	};
 
@@ -257,6 +259,39 @@ function Controller() {
 
 	//this function is triggered by the tab key and fills the hint into the main input
 	this.autocompleteUse = function() {
-		geto('consoleInput').value = geto('autocomplete').value;
+		if(geto('autocomplete').value) {
+			geto('consoleInput').value = geto('autocomplete').value;
+		}
+	};
+
+	//console help, invoked by the help command
+	this.help = function(arg) {
+		let buildEntry = function(item) {
+			let entry = item.command.toUpperCase();
+			if(item.description) {
+				entry += ': ' + item.description;
+			}
+			if(item.tags && item.tags.length > 0) {
+				entry += ` (Tags: ${item.tags.join(', ')})`;
+			}
+			return entry + '<br>';
+		}
+
+		let match;
+		if(arg) {
+			match = controller.getConsole().commands.filter(item => item.command === arg);
+			if(match.length === 0) {
+				match = controller.getConsole().commands.filter(item => (item.tags && item.tags.indexOf(arg) > -1));
+			}
+			if(match.length === 0) {
+				controller.log(`Command ${arg} not found!`);
+				return;
+			}
+		}
+		else {
+			match = controller.getConsole().commands;
+		}
+		controller.log(`${match.length} command${match.length > 1 ? 's' : ''} found:<br>`);
+		match.forEach(item => controller.log(buildEntry(item)));
 	};
 };

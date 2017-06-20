@@ -62,12 +62,30 @@ When the file is loaded, the texture property is overwritten with reference to t
 Stored in *classes.json*, contains all game classes.
 
 Associative array - each game class is an object under key (its identifier). Each object can contain anything really...
-There 3 categories so far:
+There 4 categories so far, the category is saved in the mandatory **purpose** property. One class can have more purposes, therefore it's an array.
+
+Purposes:
 - mapObject - will cause collisions with player, either acting as a barrier or invoking onwalk callback
 - item - inventory item that can be shown, used, traded etc.
 - mob - something to fight
+- charClass - specification of character type
 
 ### mapObject properties:
 - **obstacle** = true/false, it means whether it will stop movement of player
-- **onwalk** = string with javascript code that will be executed when the player tries to walk on it
-- **onclick** = string with javascript code that will be executed when the user clicks on it
+- **onwalk** is a string with javascript code that will be executed when the player tries to walk on it
+- **onclick** is a string with javascript code that will be executed when the user clicks on it
+
+### item properties:
+- **description** is a short text that will be displayed in item details
+- **textureName** is name of texture, that will be drawn in item details (optional)
+- **onuse** is a string with javascript code that will be executed when the player chooses to use item in inventory
+- **equipable** = true/false, whether it can be equipped by a character. If so, more properties will follow:
+- item stats etc.
+
+### mob properties:
+- **name** is name of the mob to be displayed in combat
+
+### charClass properties:
+- **name** is full name of the character class (not just identifier)
+- **textureName** is name of texture, that will be drawn when the character is browsed
+- bonuses etc.

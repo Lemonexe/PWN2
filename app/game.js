@@ -15,14 +15,170 @@ function Game() {
 		this.activeZone - a portion of game.map that the player currently resides in, for purposes of rendering and collisions
 	*/
 
-	//constructor for player object
+	//constructor for player object. Player is created straight away, because its universal. Characters are created later, when game files are loaded, because they are game-content-specific
 	this.Player = function() {
 		this.top = 1;
 		this.left = 1;
 		this.z = 10;
-		this.texture = "hero";
+		this.textureName = 'hero';
 		this.ready2move = true;
+
+		//gameplay information
+		this.characters = [];
+		this.inventory = [];
+		this.general = {
+			gold: 0
+			//exp, level
+		};
+
+		//movement limiter
 		time.addEvent('movement', 'interval', 1000/10, function() {game.state.player.ready2move = true;});
+	};
+
+	//functionality related to inventory
+	this.inventory = {
+		//lists an inventory from argument (or player inventory if none supplied - in that case, gold will also be written)
+		list: function(inventory) {
+			let isPlayerInv = false;
+			if(!inventory) {
+				inventory = game.state.player.inventory;
+				isPlayerInv = true;
+			}
+
+			controller.clear();
+			controller.log('Inventory:');
+			if(isPlayerInv) {controller.log('Gold: ' + game.state.player.general.gold);}
+			controller.log('List of items - type "open item" to see details of the item or "exit" to close the inventory:');
+			controller.log();
+			inventory.forEach(function(item) {
+				let str = item.className;
+				if(item.count > 1) {
+					str += ' x' + item.count;
+				}
+				controller.log(str);
+			});
+		},
+
+		//details of item in inventory from argument (or player inventory, if none supplied)
+		open: function(className, inventory) {
+			//default arg and validity check
+			if(!inventory) {inventory = game.state.player.inventory;}
+			if(!inventory.getObj('className', className)) {
+				controller.log('No such item is present!');
+				return;
+			}
+
+			//manage console
+			controller.clear();
+
+			let commands = [{
+				command: 'exit',
+				callback: function() {controller.deleteConsole();game.inventory.list();}
+			},{
+				command: 'use',
+				callback: new Function(game.classes[className].onuse)
+			}];
+			controller.addConsole(className, commands);
+			state.address.push(className);
+
+			//write info and draw texture
+			controller.log();
+			controller.log(className + ': ' + game.classes[className].description);
+			controller.log('Type "use" to use it or "exit" to close the item.');
+
+			let textureName = game.classes[className].textureName;
+			if(textureName) {
+				controller.getConsole().ASCII = render.textures.getObj('name', textureName);
+			}
+		},
+
+		//add or remove items of className with count (can be negative) to an inventory from argument (or player inventory, if none supplied)
+		add: function(className, count, inventory) {
+			//default args
+			if(!inventory) {
+				inventory = game.state.player.inventory;
+				if(typeof count === 'undefined') {count = 1;}
+			}
+
+			//check the inventory, the item might be already there
+			let newItem = true;
+			for(let i in inventory) {
+				if(inventory.hasOwnProperty(i) && inventory[i].className === className) {
+					//item is already present, so only its count will be changed and if it plunges below zero, item will be removed
+					inventory[i].count += count;
+					newItem = false;
+					if(inventory[i].count < 0) {
+						inventory.splice(i, 1);
+					}
+					break;
+				}
+			}
+
+			//item isn't there, so it's added (can't be removed)
+			if(newItem && count > 0) {
+				inventory.push({
+					className: className,
+					count: count
+				});		
+			}
+		}
+	};
+
+	//functionality related to common player stats and characters
+	this.chars = {
+		//writes general data about player and lists characters
+		list: function() {
+			controller.clear();
+
+			controller.log('Your group:');
+			controller.log('Exp, level, etc.');
+			controller.log('List of characters - type "open name" to see details or "exit" to close chars:');
+			controller.log();
+			for(let char of game.state.player.characters) {
+				controller.log(`${char.name} (${game.classes[char.className].name})`);
+			}
+		},
+
+		//open character details
+		open: function(name) {
+			//check validity
+			let char = game.state.player.characters.getObj('name', name);
+			if(!char) {
+				controller.log('No such character is present!');
+				return;
+			}
+
+			//manage console
+			controller.clear();
+
+			let commands = [{
+				command: 'exit',
+				callback: function() {controller.deleteConsole();game.chars.list();}
+			}];
+			controller.addConsole(name, commands);
+			state.address.push(name);
+
+			//write info and draw texture
+			controller.log(name);
+			controller.log();
+			controller.log('Type "exit" to close.');
+			controller.log('Some description, I guess.');
+			controller.log('Details about skills etc.');
+
+			let textureName = game.classes[char.className].textureName;
+			if(textureName) {
+				controller.getConsole().ASCII = render.textures.getObj('name', textureName);
+			}
+		},
+
+		//function to add a character object into player
+		add: function(name, className) {
+			game.state.player.characters.push({
+				name: name,
+				className: className,
+				//stats, skills, equips, class (a game class with specifications what bonuses does this character have etc.)
+			});
+		}
 	};
 
 	//move the player. First the theoretical position will be defined and checked for collisions (all triggers will be executed). If everything is all right, it will become real position
