@@ -6,7 +6,6 @@ transparency bugfix
 refactor console ascii to embedded?
 
 **ADMIN APP** with frontend (most of the app) and backend (just for saving)
-- basic authentication
 - config.json
 - adding textures
 - adding gameObject classes

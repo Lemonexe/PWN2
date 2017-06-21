@@ -5,6 +5,14 @@ RENDER.JS
 */
 
 function Render() {
+	//EVENT LISTENERS
+	geto('consoleInput').onblur = function() {
+		if(state.tab === 'console') {geto('consoleInput').focus();}
+	};
+	window.onresize = function() {render.autoResize();};
+
+
+
 	//this is where width and height is stored (along with the div id="game", of course)
 	this.width = 0;
 	this.height = 0;
@@ -231,12 +239,4 @@ function Render() {
 	//ACTIONS
 	this.autoResize();
 	this.renderConsole();
-
-
-
-	//EVENT LISTENERS
-	geto('consoleInput').onblur = function() {
-		if(state.tab === 'console') {geto('consoleInput').focus();}
-	};
-	window.onresize = function() {render.autoResize();};
 };

@@ -17,18 +17,19 @@ The main file is [**engine.js**](wiki/engine.md). The code is then structured in
 
 [**Controller**](wiki/controller.md) contains event listeners and the whole code concerning console.
 
-**Other utilities** are in [services directory](wiki/services).
+Other utilities are in [services directory](wiki/services).
 
-State is saved in two objects - state of GUI (command history etc.) is stored in [**State object**](wiki/engine.md), everything related to the game character is stored in `Game.state`.
+Code itself doesn't contain any game content, it is stored in [**JSON files**](wiki/data.md).
+
+State variables are saved in two objects - state of GUI (command history etc.) is stored in [**State object**](wiki/engine.md), everything related to the game character is stored in *Game.state* (see [**Game**](wiki/game.md)).
 
 ~~[**statistics.php**](wiki/statistics.md)~~ is a simple PHP script to save statistics about players. Data is collected by the game application and sent as AJAX post requests.
 
 ## Admin
-### doesn't exist yet!!!
 This application contains a backend PHP application and frontend HTML/JS application.
 It has a very simple authentication system to access the administration interface, which is then used to create the game content.
 
-~~More details [here](wiki/admin.md)~~
+More details [here](wiki/admin.md)
 
 ## General development practices
 This is just an opinion of Lemonexe...
@@ -37,5 +38,5 @@ This is just an opinion of Lemonexe...
 - temporary experiments should be at least commented (but rather deleted) before committing
 - the code should work in important modern browsers (Chrome, FF, Edge, Safari). Support for IE6 and alike is dropped because I really enjoy ECMA6:
   - generation of strings interlaced with many variables should be done using Template literals for clarity
-  - arrow functions should be used in cases where the function doesn't do anything but return a value, which is a simple expression
-- even though I love the ternary conditional operator, it shouldn't be used with long expressions, it makes the code confusing.
+  - arrow functions should be used in cases where the function doesn't do anything but return a simple expression
+- even though I love the ternary conditional operator and use it all the time, it shouldn't be used with long expressions, it makes the code confusing.

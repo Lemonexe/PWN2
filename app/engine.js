@@ -69,7 +69,7 @@ function AJAXload(url) {
 	});
 }
 
-//a thenable function that saves data to the server (for statistics)
+//this function saves data to the server (for statistics)
 function AJAXsave(url, data) {
 	let xobj = new XMLHttpRequest();
 	xobj.open('POST', url, true);
