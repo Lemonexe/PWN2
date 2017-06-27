@@ -32,12 +32,11 @@ const save = {
 		localStorage.setItem('savegame', data);
 	},
 
-	//loads data from localStorage and executes loadFinish on them
+	//loads data from localStorage and executes loadFinish on them. Returns true / false to indicate success
 	loadLocal: function() {
 		let data = localStorage.getItem('savegame');
-		if(data) {
-			save.loadFinish(data);
-		}
+		if(data) {save.loadFinish(data);}
+		return !!data;
 	},
 
 	//deletes the localStorage save

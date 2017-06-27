@@ -5,7 +5,7 @@ ENGINE.JS
 */
 
 //	INITIALIZATION
-var state, controller, render, game, time;
+let state, controller, render, game, time;
 
 function init() {
 	time = new Time();
@@ -13,9 +13,6 @@ function init() {
 	state = new State();
 	render = new Render();
 	game = new Game();
-
-	//if possible, load save from local storage
-	save.loadLocal();
 
 	//load files with game and execute proper code on them
 	fileLoader.init();

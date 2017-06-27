@@ -1,6 +1,6 @@
 # Engine
 
-This is the main file of the JS code of PWN, it executes object constructors of main objects (and services that are coded as constructors (some are directly defined objects)) in init function, which is executed upon window.onload. The init function also loads localStorage save (see [save.js](services/save.md)) and loads game files (see [fileLoader.js](services/fileLoader.md))
+This is the main file of the JS code of PWN, it executes object constructors of main objects (and services that are coded as constructors (some are directly defined objects)) in init function, which is executed upon window.onload. The init function also loads game files and starts the game (see [fileLoader.js](services/fileLoader.md))
 
 ## State
 It also contains constructor of one of the main game objects, the state. This object contains every variables that are results of user's actions (but NOT the game character info (stats, inventory, quests, position on map), that's in game.state!). For example it doesn't contain width and height of the gamebox, because those are not in user's control and are updated automatically...

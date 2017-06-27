@@ -34,6 +34,7 @@ const ascii = {
 	//function that converts string (ANS file) to a HTML string
 	convert: function(file) {
 		let html = '';
+		let last = '';
 		let openSpan = false;
 		let brightness = 0;
 		let color = 7;
@@ -49,7 +50,6 @@ const ascii = {
 
 		//while file lasts, we'll eat substrings delimited by CSIs one by one
 		while(file.length > 0) {
-
 			let firstEsc = file.search(/\x1B/);
 
 			//no CSI, convert entire file as plaintext
@@ -107,6 +107,10 @@ const ascii = {
 				html += file.slice(0, firstEsc);
 				file = file.slice(firstEsc)
 			}
+
+			//failsafe to prevent infinite cycle
+			if(file === last) {break;}
+			last = file;
 		}
 		//while feast has ended! Now we'll just add some final touches to the generated html
 		if(openSpan) {

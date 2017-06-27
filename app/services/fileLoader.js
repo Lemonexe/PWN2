@@ -6,31 +6,38 @@ FILELOADER.JS
 var fileLoader = {
 	//files loaded yet, number of all files to be loaded
 	files: 0,
-	filesLength: 0,
+	filesLength: 4,
 
-	//start loading files by reading config.json (a mandatory file!), interpret and store the gameInitCode and load all files listed in config.json
+	//loads all JSON files and interprets them
 	init: function() {
 		JSONload('data/config.json', function(data) {
 			fileLoader.gameInitCode = new Function(data.init);
-			fileLoader.filesLength = data.files.length;
-
-			for(let f of data.files) {
-				JSONload(f.url, function(data) {
-					if(f.method && fileLoader.hasOwnProperty(f.method)) {
-						fileLoader[f.method](data);
-					}
-					fileLoader.files++;
-					fileLoader.finish();
-				});
-			}
+			fileLoader.finish();
+		});
+		JSONload('data/map.json', function(data) {
+			fileLoader.processMap(data);
+			fileLoader.finish();
+		});
+		JSONload('data/classes.json', function(data) {
+			fileLoader.processClasses(data);
+			fileLoader.finish();
+		});
+		JSONload('data/textures.json', function(data) {
+			fileLoader.processTextures(data);
+			fileLoader.finish();
 		});
 	},
 
 	//checks whether all files are loaded and if so, finishes the loading process
 	finish: function() {
+		this.files++;
 		if(this.files === this.filesLength) {
+			//save.loadLocal loads SAVEGAME, not FILE. It is here because we need to determine whether or not to execute gam
+			let local = save.loadLocal();
+			if(!local) {
+				this.gameInitCode();
+			}
 			this.remapGameMap();
-			this.gameInitCode();
 			time.addEvent('FPS', 'interval', 1000/20, function() {render.renderFPS();});
 		}
 	},

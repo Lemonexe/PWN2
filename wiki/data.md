@@ -1,14 +1,9 @@
 # Data structures
 
-All game content is stored in JSON files (so they can be edited by the [admin app](admin.md)). Most important of those files is *config.json*, which contains information about other data files.
-Using the information in *config.json* the files are loaded by the [fileLoader](services/fileLoader.md) service and processed. Here is what they contain and how does it affect the application:
+All game content is stored in JSON files (so they can be edited by the [admin app](admin.md)). They are all loaded using the [fileLoader](services/fileLoader.md) service and processed. Here is what they contain and how does it affect the application:
 
 ## Config
-Has property **files** and **init**.
-
-Files is an array of objects like this: `{"url":"data/map.json","method":"processMap"}`, **method** is name of method in fileLoader that will be used to process this file.
-
-Init is javascript code that will be executed when all game files have been loaded and processed.
+Has property **init** - javascript code that will be executed when a new game is started.
 
 ## Textures
 Stored in *textures.json*, contains all textures
@@ -16,8 +11,8 @@ Stored in *textures.json*, contains all textures
 Array of objects, each object has these properties:
 - **name**, a unique identifier
 - **width** and **height** (in characters)
-- **ascii**, the ascii art itself (in the form of raw .ans file content). It is either a string (for static pictures) or array of ascii arts (for animations)
-- if it is an animation, there must be an **int** number, interval between animation frames in miliseconds
+- **ascii**, the ascii art itself (in the form of raw .ans file content). It is an array of ascii art strings (length = 1 for static, > 1 for animations)
+- if it is an animation, there must be an **int** number, interval between animation frames in miliseconds. Defaults to 1000
 
 When the file is loaded, the .ans files are converted into HTML ready to be drawn
 
@@ -62,7 +57,7 @@ When the file is loaded, the texture property is overwritten with reference to t
 Stored in *classes.json*, contains all game classes.
 
 Associative array - each game class is an object under key (its identifier). Each object can contain anything really...
-There 4 categories so far, the category is saved in the mandatory **purpose** property. One class can have more purposes, therefore it's an array.
+There 4 categories so far, the category is saved in the mandatory **purposes** property. One class can have more purposes, therefore it's an array.
 
 Purposes:
 - mapObject - will cause collisions with player, either acting as a barrier or invoking onwalk callback

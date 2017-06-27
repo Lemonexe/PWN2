@@ -200,15 +200,12 @@ function Render() {
 				((leftEdge || rightEdge) && inHeight) ||
 				(overHeight && overWidth);
 			return result;
-
 		};
 
 		//filter objects from game.activeZone using, sort them by zIndex add player and convert them all
 		let renderable = game.activeZone.filter(squares)
 			.sort(function(a, b) {
-				let aZ = (typeof a.z === 'number') ? a.z : 1;
-				let bZ = (typeof b.z === 'number') ? b.z : 1;
-				return aZ - bZ;
+				return (a.z || 1) - (b.z || 1);
 			});
 
 		renderable.push({
@@ -225,18 +222,16 @@ function Render() {
 
 	//this functions handles ascii animations - takes a texture and returns the ascii that is supposed to be drawn right now
 	this.getASCII = function(texture) {
-		if(typeof texture.ascii === 'string') {
-			return texture.ascii;
-		}
-		else if(typeof texture.ascii === 'object') {
-			//index of animation
-			return texture.ascii[Math.floor((time.time/texture.int) % texture.ascii.length)];
-		}
+		//int = animation interval, defaults to 1000 if undefined. i = index of animation, always zero for static animations
+		let int = texture.int || 1000;
+		let i = Math.floor((time.time/int) % texture.ascii.length);
+		return texture.ascii[i];
 	};
 
 
 
 	//ACTIONS
+	this.switchTab('console');
 	this.autoResize();
 	this.renderConsole();
 };
