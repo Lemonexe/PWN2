@@ -84,8 +84,8 @@ function JSONload(url, callback) {
 
 //an Array method - it searches array of objects and returns the object that contains the requested key: value, or false if none such found
 Object.defineProperty(Array.prototype, 'getObj', {
-    enumerable: false,
-    value: function(key, value) {
+	enumerable: false,
+	value: function(key, value) {
 		let arr = this
 			.filter(item => typeof item === 'object')
 			.filter(item => item[key] === value);

@@ -12,11 +12,20 @@ if($data) {
 		$u = urldecode($_COOKIE['user']);
 		$h = urldecode($_COOKIE['pass']);
 		if(isset($users[$u]) && $h === $users[$u]) {
-			//authentication successful 
-			file_put_contents('../data/config.json', json_encode($data['config']));
-			file_put_contents('../data/classes.json', json_encode($data['classes']));
-			file_put_contents('../data/map.json', json_encode($data['map']));
-			file_put_contents('../data/textures.json', json_encode($data['textures']));
+			//authentication successful. Here is list of files: member of data => file address
+			$files = [
+				'config' => '../data/config.json',
+				'classes' => '../data/classes.json',
+				'map' => '../data/map.json',
+				'textures' => '../data/textures.json'
+			];
+
+			//foreach file create backup and put contents
+			foreach($files as $key => $value) {
+				//---DEVELOPMENT---
+				//copy($value, $value.'.bak');		UNCOMMENT FOR PRODUCTION
+				file_put_contents($value, json_encode($data[$key]));
+			}
 		}
 		else {$code = 401;}
 	}

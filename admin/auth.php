@@ -13,8 +13,9 @@ if(isset($_POST['user']) && isset($_POST['pass'])) {
 	if(
 		isset($users[$u]) && password_verify($p, $users[$u])
 	) {
-		setcookie('user', $u);
-		setcookie('pass', $users[$u]);
+		$exp = time() + 86400*365;
+		setcookie('user', $u, $exp, '/');
+		setcookie('pass', $users[$u], $exp, '/');
 		header('Location: index.php');
 	}
 	else {

@@ -1,14 +1,29 @@
+ADMIN
+- config.json
+- adding gameObject classes
+
 # Small changes
+
+try using actual hyperlinks in console?
+
 transparency bugfix
+
+autosave
 
 # Huge changes
 
 refactor console ascii to embedded?
 
+implement combat
+
+implement levels & stats & skills
+
+implement dialogs
+
+windows for minigames
+
 **ADMIN APP** with frontend (most of the app) and backend (just for saving)
-- config.json
 - adding textures
-- adding gameObject classes
 - creating gameMap
 
 **STATISTICS APP**

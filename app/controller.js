@@ -2,25 +2,10 @@
 CONTROLLER.JS
 	This file contains constructor of the controller object
 	Controller object operates the CONSOLE and listens to events
-	Event listeners are bound at the beginning of the function
+	Event listeners are bound at the end of the function
 */
 
-function Controller() {
-	//EVENT LISTENERS - onkeydown, detection of console input change and general runtime error
-	window.onkeydown = function(event) {controller.processKey(event);};
-
-	geto('consoleInput').oninput = function() {
-		controller.autocomplete();
-	};
-
-	//---DEVELOPMENT---
-	window.onerror = function(error) {
-		controller.log('Error: ' + error);
-		return true;
-	};
-
-
-
+function Controller(suppress) {
 	//main function to process onkeydown event, works together with this.keyBinds
 	this.processKey = function(event) {
 		let keyBinds = this.keyBinds[state.tab];
@@ -294,4 +279,20 @@ function Controller() {
 		controller.log(`${match.length} command${match.length > 1 ? 's' : ''} found:<br>`);
 		match.forEach(item => controller.log(buildEntry(item)));
 	};
+
+
+	//Unless it is suppressed by argument, the Controller constructor defines these EVENT LISTENERS - onkeydown and detection of console input change
+	if(!suppress) {
+		window.onkeydown = function(event) {controller.processKey(event);};
+
+		geto('consoleInput').oninput = function() {
+			controller.autocomplete();
+		};
+
+		//---DEVELOPMENT---
+		window.onerror = function(error) {
+			controller.log('Error: ' + error);
+			return true;
+		};
+	}
 };

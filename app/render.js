@@ -2,17 +2,10 @@
 RENDER.JS
 	This file contains constructor of the render object
 	Render operates DOM to render the game box, console, gamemap
+	Event listeners are bound at the end of the function
 */
 
-function Render() {
-	//EVENT LISTENERS
-	geto('consoleInput').onblur = function() {
-		if(state.tab === 'console') {geto('consoleInput').focus();}
-	};
-	window.onresize = function() {render.autoResize();};
-
-
-
+function Render(suppress) {
 	//this is where width and height is stored (along with the div id="game", of course)
 	this.width = 0;
 	this.height = 0;
@@ -229,9 +222,16 @@ function Render() {
 	};
 
 
+	//Unless it is suppressed by argument, the Render constructor does these default actions and defines event listeners
+	if(!suppress) {
+		this.switchTab('console');
+		this.autoResize();
+		this.renderConsole();
 
-	//ACTIONS
-	this.switchTab('console');
-	this.autoResize();
-	this.renderConsole();
+		//EVENT LISTENERS
+		geto('consoleInput').onblur = function() {
+			if(state.tab === 'console') {geto('consoleInput').focus();}
+		};
+		window.onresize = function() {render.autoResize();};
+	}
 };

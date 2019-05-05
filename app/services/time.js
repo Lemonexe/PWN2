@@ -33,7 +33,9 @@ function Time() {
 
 	//operates the timeEvent constructor. An easier way to create a time event
 	this.addEvent = function (name, type, duration, callback) {
-		this.events.push(new this.timeEvent(name, type, duration, callback));
+		if(name && type && duration && callback) {
+			this.events.push(new this.timeEvent(name, type, duration, callback));
+		}
 	};
 
 	//deletes event by name

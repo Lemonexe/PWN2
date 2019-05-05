@@ -18,4 +18,6 @@ These files are stored in the *includes* folder, which should be restricted by s
 
 **main.php** contains the admin application itself. Also contains *main.js* and some javascript from the game app
 
-**main.js** is javascript file for the admin application, contains functions related to its user interface
+**Javascript files** for the admin application - access to them is restricted to authorized users, which isn't really necessary, but why not...
+- **main.js** contains generic functions, infrastructure
+- **gui.js** contains view and controller (for editing itself)
